@@ -1,6 +1,6 @@
 #!/usr/local/bin/perl
 
-use lib '..';
+use lib qw(../lib ../blib/lib ../blib/arch);
 use Benchmark;
 use Image::Imlib2;
 

@@ -1,5 +1,9 @@
 Revision history for Perl extension Image::Imlib2.
 
+1.02 Tue May 25 22:18:32 BST 2004
+	- renamed Changes to CHANGES 
+	- new set_quality function (thanks to Andreas Plesner)
+
 1.01 Mon Nov  3 19:18:14 GMT 2003
 	- document get_width and get_height methods (thanks to Andreas
 	Plesner)

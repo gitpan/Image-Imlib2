@@ -18,7 +18,7 @@ require AutoLoader;
     TEXT_TO_DOWN
     TEXT_TO_ANGLE
 );
-$VERSION = '1.01';
+$VERSION = '1.02';
 
 sub AUTOLOAD {
     # This AUTOLOAD is used to 'autoload' constants from the constant()
@@ -73,6 +73,9 @@ Image::Imlib2 - Interface to the Imlib2 image library
 
   # draw a line
   $image->draw_line(0, 0, 200, 50);
+
+  # set quality before saving
+  $image->set_quality(50);
 
   # save out
   $image->save('out.png');
@@ -166,6 +169,13 @@ string and may be "jpeg", "tiff", "png", etc. The exact number of
 formats supported depends on how you built imlib2.
 
   $image->image_set_format("jpeg"); # Convert image to JPG
+
+=head2 set_quality
+
+This sets the quality of the saved picture - lower the quality to
+get smaller filesizes.
+
+  $image->seq_quality(50);
 
 =head2 set_color (r, g, b, a) or set_colour (r, g, b, a)
 

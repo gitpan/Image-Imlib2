@@ -10,7 +10,7 @@
 # Leon Brocard
 
 use strict;
-use lib '.';
+use lib qw(../lib ../blib/lib ../blib/arch);
 use Image::Imlib2;
 use POSIX qw(floor);
 

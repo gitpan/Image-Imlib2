@@ -19,6 +19,9 @@ SYNOPSIS
       # draw a line
       $image->draw_line(0, 0, 200, 50);
 
+      # set quality before saving
+      $image->set_quality(50);
+
       # save out
       $image->save('out.png');
 
@@ -101,6 +104,12 @@ METHODS (Image::Imlib2)
     formats supported depends on how you built imlib2.
 
       $image->image_set_format("jpeg"); # Convert image to JPG
+
+  set_quality
+    This sets the quality of the saved picture - lower the quality to get
+    smaller filesizes.
+
+      $image->seq_quality(50);
 
   set_color (r, g, b, a) or set_colour (r, g, b, a)
     This sets the colour that the drawing primitives will use. You specify
@@ -267,6 +276,16 @@ METHODS (Image::Imlib2::ColorRange)
     specified distance.
 
       $cr->add_color(10, 255, 127, 0, 66);
+
+  get_width
+    Returns the current width of the image.
+
+      my $width = $image->get_width;
+
+  get_height
+    Returns the current height of the image.
+
+      my $height = $image->get_height;
 
 AUTHOR
     Leon Brocard, leon@astray.com

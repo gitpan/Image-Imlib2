@@ -549,6 +549,17 @@ Image::Imlib2 Imlib2_create_scaled_image(image, dw, dh)
         OUTPUT:
 	        RETVAL
 
+Image::Imlib2 Imlib2_set_quality(image, qual)
+        Image::Imlib2	image
+	int qual
+
+	PROTOTYPE: $$
+
+        CODE:
+	{
+		imlib_context_set_image(image);
+		imlib_image_attach_data_value("quality",NULL,qual,NULL);
+	}
 
 MODULE = Image::Imlib2	PACKAGE = Image::Imlib2::Polygon	PREFIX= Imlib2_Polygon_
 
