@@ -1,5 +1,10 @@
 Revision history for Perl extension Image::Imlib2.
 
+1.03 Tue Jul 13 11:30:47 IST 2004
+	- fixed minor POD tyop
+	- new flip_horizontal, flip_vertical, flip_diagonal (thanks to
+	Tuomas Jormola)
+
 1.02 Tue May 25 22:18:32 BST 2004
 	- renamed Changes to CHANGES 
 	- new set_quality function (thanks to Andreas Plesner)

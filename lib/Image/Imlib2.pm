@@ -18,7 +18,7 @@ require AutoLoader;
     TEXT_TO_DOWN
     TEXT_TO_ANGLE
 );
-$VERSION = '1.02';
+$VERSION = '1.03';
 
 sub AUTOLOAD {
     # This AUTOLOAD is used to 'autoload' constants from the constant()
@@ -175,7 +175,7 @@ formats supported depends on how you built imlib2.
 This sets the quality of the saved picture - lower the quality to
 get smaller filesizes.
 
-  $image->seq_quality(50);
+  $image->set_quality(50);
 
 =head2 set_color (r, g, b, a) or set_colour (r, g, b, a)
 
@@ -330,6 +330,25 @@ Create a new image, scaled from the original to the dimensions given in x
 and y. If x or y are 0, then retain the aspect ratio given in the other.
 
   $image2=$image->create_scaled_image(100,100);  # Scale to 100x100 pixels
+
+=head2 flip_horizontal ()
+
+This will flip/mirror the image horizontally.
+
+  $image->flip_horizontal();
+
+=head2 flip_vertical ()
+
+This will flip/mirror the image vertically.
+
+  $image->flip_vertical();
+
+=head2 flip_diagonal ()
+
+This will flip/mirror the current image diagonally (good for quick and dirty
+90 degree rotations if used before to after a horizontal or vertical flip).
+
+  $image->flip_diagonal();
 
 =head1 METHODS (Image::Imlib2::Polygon)
 

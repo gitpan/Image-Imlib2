@@ -109,7 +109,7 @@ METHODS (Image::Imlib2)
     This sets the quality of the saved picture - lower the quality to get
     smaller filesizes.
 
-      $image->seq_quality(50);
+      $image->set_quality(50);
 
   set_color (r, g, b, a) or set_colour (r, g, b, a)
     This sets the colour that the drawing primitives will use. You specify

@@ -561,6 +561,39 @@ Image::Imlib2 Imlib2_set_quality(image, qual)
 		imlib_image_attach_data_value("quality",NULL,qual,NULL);
 	}
 
+Image::Imlib2 Imlib2_flip_horizontal(image)
+        Image::Imlib2	image
+
+	PROTOTYPE: $
+
+        CODE:
+	{
+		imlib_context_set_image(image);
+		imlib_image_flip_horizontal();
+	}
+
+Image::Imlib2 Imlib2_flip_vertical(image)
+        Image::Imlib2	image
+
+	PROTOTYPE: $
+
+        CODE:
+	{
+		imlib_context_set_image(image);
+		imlib_image_flip_vertical();
+	}
+
+Image::Imlib2 Imlib2_flip_diagonal(image)
+        Image::Imlib2	image
+
+	PROTOTYPE: $
+
+        CODE:
+	{
+		imlib_context_set_image(image);
+		imlib_image_flip_diagonal();
+	}
+
 MODULE = Image::Imlib2	PACKAGE = Image::Imlib2::Polygon	PREFIX= Imlib2_Polygon_
 
 Image::Imlib2::Polygon
