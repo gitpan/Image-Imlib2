@@ -3,6 +3,10 @@
 # This is a program which attempts to produce a picture
 # I once saw by John Maeda.
 #
+# Note: there appears to be a bug in fill_ellipse in some versions of
+# imlib2. Change that to fill_rectange all if you get is a white
+# screen.
+#
 # Leon Brocard
 
 use strict;

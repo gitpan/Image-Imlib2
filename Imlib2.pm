@@ -13,7 +13,7 @@ require AutoLoader;
 # Do not simply export all your public functions/methods/constants.
 @EXPORT = qw(
 );
-$VERSION = '0.01';
+$VERSION = '0.02';
 
 bootstrap Image::Imlib2 $VERSION;
 
@@ -59,7 +59,7 @@ polygon support, etc. It does ALL of these operations FAST. It allows
 you to create colour images using a large number of graphics
 primitives, and output the images in a range of formats.
 
-Note that this is the first version of my attempt at a Perl interface
+Note that this is an early version of my attempt at a Perl interface
 to Imlib2. Currently, the API is just to test things out. Not
 everything is supported, but a great deal of functionality already
 exists. If you think the API can be tweaked to be a bit more
@@ -211,7 +211,7 @@ Leon Brocard, leon@astray.com
 
 =head1 COPYRIGHT
 
-Copyright (c) 2000 Leon Brocard. All rights reserved. This program is
+Copyright (c) 2000-1 Leon Brocard. All rights reserved. This program is
 free software; you can redistribute it and/or modify it under the same
 terms as Perl itself.
 

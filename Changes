@@ -1,5 +1,9 @@
 Revision history for Perl extension Image::Imlib2.
 
+0.02  Wed Aug 29 10:40:56 BST 2001
+	- mention that imlib2 is out. I intend to rewrite this with
+	  Inline::C to make it more maintainable
+
 0.01  Thu Oct  5 16:58:52 BST 2000
 	- released initial version
 

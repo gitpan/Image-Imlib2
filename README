@@ -9,7 +9,7 @@ primitives, and output the images in a range of formats.
 
 NOTES
 
-Note that this is the first version of my attempt at a Perl interface
+Note that this is an early version of my attempt at a Perl interface
 to Imlib2. Currently, the API is just to test things out. Not
 everything is supported, but a great deal of functionality already
 exists. If you think the API can be tweaked to be a bit more
@@ -18,25 +18,9 @@ intuitive, drop me a line!
 
 INSTALLATION
 
-Note that a development version of Imlib2 must be installed before
-installing this module. In order to do this, please follow these steps:
-
-export CVSROOT=":pserver:anonymous@cvs.enlightenment.org:/cvs/enlightenment"
-cvs login # hit return after this when you get a password prompt
-cvs -z3 co edb
-cvs -z3 co imlib2
-
-cd edb/
-./autogen.sh
-make
-make install
-
-cd ../imlib2
-./autogen.sh
-make
-make install
-
-... and that should install the Imlib2 C library for you.
+Imlib2 has now been released! Note that it must be installed before
+installing this module. You may download it from:
+http://sourceforge.net/projects/enlightenment/
 
 You install Image::Imlib2, as you would install any Perl module
 library, by running these commands:
