@@ -18,7 +18,7 @@ require AutoLoader;
     TEXT_TO_DOWN
     TEXT_TO_ANGLE
 );
-$VERSION = '0.10';
+$VERSION = '0.11';
 
 sub AUTOLOAD {
     # This AUTOLOAD is used to 'autoload' constants from the constant()
@@ -123,8 +123,7 @@ exists. If you think the API can be tweaked to be a bit more
 intuitive, drop me a line!
 
 Note that a development version of Imlib2 must be installed before
-installing this module: see the README file in the Image::Imlib2
-package.
+installing this module.
 
 =head1 Exported constants
 
@@ -184,6 +183,13 @@ left, with (50, 0) to the right of the top left, (0, 50) below the top
 left, and (50, 50) to the bottom right of the top left.
 
   $image->draw_point(50, 50);
+
+=head2 query_pixel (x, y)
+
+This returns the colour of a pixel in the image. It returns the red,
+green, blue and alpha components:
+
+  my($r, $g, $b, $a) = $image->query_pixel(50,50);
 
 =head2 draw_line (x1, y1, x2, y2)
 
@@ -293,7 +299,6 @@ x, y, x+width, y+width.
 
   $image->fill_color_range_rectangle($cr, 10, 20, 100, 150, 0);
 
-
 =head2 image_orientate (steps)
 
 This will rotate the image by steps*90 degrees, so to rotate by 90 degrees
@@ -307,7 +312,7 @@ Create a new image, scaled from the original to the dimensions given in x
 and y. If x or y are 0, then retain the aspect ratio given in the other.
 
   $image2=$image->create_scaled_image(100,100);  # Scale to 100x100 pixels
- 
+
 =head1 METHODS (Image::Imlib2::Polygon)
 
 =head2 new
@@ -327,7 +332,6 @@ Adds a point to the polygonal construct.
 Fills polygon in the current context.
 
   $poly->fill();
-
 
 =head1 METHODS (Image::Imlib2::ColorRange)
 
@@ -350,11 +354,11 @@ Leon Brocard, leon@astray.com
 
 =head1 CONTRIBUTORS
 
-Theo Schlossnagle, Joel Rowbottom
+Sebastian Bohm, Theo Schlossnagle, Joel Rowbottom
 
 =head1 COPYRIGHT
 
-Copyright (c) 2000-2 Leon Brocard. All rights reserved. This program is
+Copyright (c) 2000-3 Leon Brocard. All rights reserved. This program is
 free software; you can redistribute it and/or modify it under the same
 terms as Perl itself.
 

@@ -1,5 +1,10 @@
 Revision history for Perl extension Image::Imlib2.
 
+0.11 Sun Mar 23 19:06:29 GMT 2003
+        - Added query_pixel thanks to Sebastian Bohm
+	- Changed test suite to use Test::More
+	- The module is now built with Module::Build
+
 0.10 Mon Sep 16 15:57:04 BST 2002
 	- Added image_orientate, create_scaled_image
 	  thanks to Joel Rowbottom

@@ -1,57 +1,51 @@
-#!/usr/bin/perl
-
+#!/usr/bin/perl -w
 use strict;
-use Test;
+use Test::More tests => 7;
 
-BEGIN { plan tests => 15 }
-
-use Image::Imlib2;
-
-# Does it load?
-ok(1); # 1
+use_ok('Image::Imlib2');
 
 my $image = Image::Imlib2->new(580, 200);
 
 # Does the constructor work?
-ok(defined($image), 1); #2
+ok(defined($image));
 
 # Is it the right width?
-ok($image->get_width, 580); #3
+is($image->get_width, 580);
 
 # Is it the right height?
-ok($image->get_height, 200); #4
+is($image->get_height, 200);
 
 # Does set_colour work?
-$image->set_colour(255, 0, 0, 255); 
-ok(1); # 5
+$image->set_colour(255, 0, 0, 255);
 
 # Does set_color work?
-$image->set_color(255, 0, 0, 255); 
-ok(1); # 6
+$image->set_color(255, 0, 0, 255);
+
+# Does query_pixel work?
+my $p = [$image->query_pixel(10, 10)];
+is_deeply($p, [0,0,0,0]);
 
 # Does draw_point work?
 $image->draw_point(10, 10);
-ok(1); # 7
+
+# Does query_pixel work?
+$p = [$image->query_pixel(10, 10)];
+is_deeply($p, [255,0,0,255]);
 
 # Does draw_line work?
 $image->draw_line(50, 10, 100, 50);
-ok(1); # 8
 
 # Does draw_rectangle work?
 $image->draw_rectangle(50, 50, 100, 100);
-ok(1); # 9
 
 # Does fill_rectangle work?
 $image->fill_rectangle(50, 50, 100, 100);
-ok(1); # 10
 
 # Does draw_ellipse work?
 $image->draw_ellipse(50, 50, 25, 25);
-ok(1); # 11
 
 # Does fill_ellipse work?
 $image->fill_ellipse(50, 50, 25, 25);
-ok(1); # 12
 
 # create a polygon
 my $poly = Image::Imlib2::Polygon->new();
@@ -67,15 +61,11 @@ $poly->fill();
 
 # draw it closed on image
 $image->draw_polygon($poly, 1);
-ok(1); # 13 coo, polygons, work
 
 # orientate it
 $image->image_orientate(1);
-ok(1); # 14
 
 # create a scaled image of it
 my $dstimage = $image->create_scaled_image(100,80);
-ok(1); # 15
 
-
-
+ok(1, "got to the end")

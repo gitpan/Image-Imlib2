@@ -215,6 +215,26 @@ Imlib2_draw_line(image, x1, y1, x2, y2)
 		imlib_image_draw_line(x1, y1, x2, y2, 0);
 	}
 
+void
+Imlib2_query_pixel(image, x, y)
+	Image::Imlib2	image
+	int 	x
+	int 	y
+
+	PROTOTYPE: $$
+
+	PREINIT:
+		Imlib_Color color_return;
+
+   PPCODE:
+		imlib_context_set_image(image);
+		
+		imlib_image_query_pixel(x, y, &color_return);
+        XPUSHs(sv_2mortal(newSViv(color_return.red)));
+        XPUSHs(sv_2mortal(newSViv(color_return.green)));
+        XPUSHs(sv_2mortal(newSViv(color_return.blue)));
+        XPUSHs(sv_2mortal(newSViv(color_return.alpha)));
+
 
 void
 Imlib2_draw_rectangle(image, x, y, w, h)
