@@ -10,6 +10,35 @@
 #include <string.h>
 
 typedef Imlib_Image Image__Imlib2;
+typedef ImlibPolygon Image__Imlib2__Polygon;
+typedef Imlib_Color_Range Image__Imlib2__ColorRange;
+
+static double
+constant(char *name, int arg)
+{
+    errno = 0;
+    switch (*name) {
+    case 'T':
+        if (strEQ(name, "TEXT_TO_RIGHT")) return IMLIB_TEXT_TO_RIGHT;
+        if (strEQ(name, "TEXT_TO_LEFT")) return IMLIB_TEXT_TO_LEFT;
+        if (strEQ(name, "TEXT_TO_UP")) return IMLIB_TEXT_TO_UP;
+        if (strEQ(name, "TEXT_TO_DOWN")) return IMLIB_TEXT_TO_DOWN;
+        if (strEQ(name, "TEXT_TO_ANGLE")) return IMLIB_TEXT_TO_ANGLE;
+        break;
+    }
+    return 0;
+
+not_there:
+    errno = ENOENT;
+    return 0;
+}  
+
+MODULE = Image::Imlib2          PACKAGE = Image::Imlib2
+
+double
+constant(name,arg)
+        char *          name
+        int             arg
 
 MODULE = Image::Imlib2		PACKAGE = Image::Imlib2		PREFIX= Imlib2_
 
@@ -295,9 +324,11 @@ Imlib2_load_font(image, fontname)
 
 
 void
-Imlib2_get_text_size(image, text)
+Imlib2_get_text_size(image, text, direction=IMLIB_TEXT_TO_RIGHT, angle=0)
 	Image::Imlib2	image
 	char * 	text
+        int direction
+        double  angle
 
         PROTOTYPE: $$
 
@@ -307,6 +338,8 @@ Imlib2_get_text_size(image, text)
 
         PPCODE:
 		imlib_context_set_image(image);
+                imlib_context_set_direction(direction);
+                imlib_context_set_angle(angle);
 
 		imlib_get_text_size(text, &text_w, &text_h);
 
@@ -315,17 +348,21 @@ Imlib2_get_text_size(image, text)
 
 
 void
-Imlib2_draw_text(image, x, y, text)
+Imlib2_draw_text(image, x, y, text, direction=IMLIB_TEXT_TO_RIGHT, angle=0)
 	Image::Imlib2	image
 	int	x
 	int 	y
 	char * 	text
+        int direction
+        double  angle
 
-	PROTOTYPE: $$$$
+	PROTOTYPE: $$$$;$$
 
         CODE:
 	{
 		imlib_context_set_image(image);
+                imlib_context_set_direction(direction);
+                imlib_context_set_angle(angle);
 
 		imlib_text_draw(x, y, text);
 	}
@@ -377,3 +414,152 @@ Imlib2_blend(image, source, alpha, x, y, w, h, d_x, d_y, d_w, d_h)
 
 		imlib_blend_image_onto_image(source, alpha, x, y, w, h, d_x, d_y, d_w, d_h);
 	}
+
+
+void
+Imlib2_draw_polygon(image, poly, closed)
+        Image::Imlib2  image
+        Image::Imlib2::Polygon  poly
+        unsigned char closed
+
+        PROTOTYPE: $$$
+
+        CODE:
+        {
+		imlib_context_set_image(image);
+
+                imlib_image_draw_polygon(poly,closed);
+        }
+
+void Imlib2_fill_color_range_rectangle(image, cr, x, y, width, height, angle)
+        Image::Imlib2  image
+        Image::Imlib2::ColorRange cr
+        int x
+        int y
+        int width
+        int height
+        double angle
+
+        PROTOTYPE: $$$$$$
+
+        CODE:
+        {
+                Imlib_Color_Range oldcr;
+
+		imlib_context_set_image(image);
+                oldcr = imlib_context_get_color_range();
+                imlib_context_set_color_range(cr);
+                imlib_image_fill_color_range_rectangle(x,y,width,height,angle);
+                imlib_context_set_color_range(oldcr);
+        }
+
+
+MODULE = Image::Imlib2	PACKAGE = Image::Imlib2::Polygon	PREFIX= Imlib2_Polygon_
+
+Image::Imlib2::Polygon
+Imlib2_Polygon_new(packname="Image::Imlib2::Polygon")
+        char * packname
+
+	PROTOTYPE: $
+
+        CODE:
+	{
+		ImlibPolygon poly;
+
+		poly = imlib_polygon_new();
+		RETVAL = poly;
+	}
+        OUTPUT:
+	        RETVAL
+
+
+void
+Imlib2_Polygon_DESTROY(poly)
+        Image::Imlib2::Polygon  poly
+
+        PROTOTYPE: $
+
+        CODE:
+        {
+                imlib_polygon_free(poly);
+        }
+
+
+void
+Imlib2_Polygon_add_point(poly, x, y)
+	Image::Imlib2::Polygon	poly
+	int x
+	int y
+
+	PROTOTYPE: $$$
+
+        CODE:
+	{
+                imlib_polygon_add_point(poly,x,y);
+	}
+
+
+void
+Imlib2_Polygon_fill(poly)
+        Image::Imlib2::Polygon  poly
+
+        PROTOTYPE: $
+
+        CODE:
+        {
+                imlib_image_fill_polygon(poly);
+        }
+
+
+MODULE = Image::Imlib2	PACKAGE = Image::Imlib2::ColorRange	PREFIX= Imlib2_ColorRange_
+
+Image::Imlib2::ColorRange
+Imlib2_ColorRange_new(packname="Image::Imlib2::ColorRange")
+        char * packname
+
+        PROTOTYPE: $
+
+        CODE:
+        {
+                Imlib_Color_Range cr;
+
+                cr = imlib_create_color_range();
+                RETVAL = cr;
+        }
+        OUTPUT:
+                RETVAL
+
+void Imlib2_ColorRange_DESTROY(cr)
+        Image::Imlib2::ColorRange cr
+
+        PROTOTYPE: $
+
+        CODE:
+        {
+                Imlib_Color_Range oldcr;
+                oldcr = imlib_context_get_color_range();
+                imlib_context_set_color_range(cr);
+                imlib_free_color_range();
+                imlib_context_set_color_range(oldcr);
+        }
+
+void Imlib2_ColorRange_add_color(cr, d, r, g, b, a)
+        Image::Imlib2::ColorRange cr
+        int d
+        int r
+        int g
+        int b
+        int a
+
+        PROTOTYPE: $$
+
+        CODE:
+        {
+                Imlib_Color_Range oldcr;
+                oldcr = imlib_context_get_color_range();
+                imlib_context_set_color_range(cr);
+                imlib_context_set_color(r,b,g,a);
+                imlib_add_color_to_color_range(d);
+                imlib_context_set_color_range(oldcr);
+        }
+

@@ -1,7 +1,7 @@
 package Image::Imlib2;
 
 use strict;
-use vars qw($VERSION @ISA @EXPORT @EXPORT_OK);
+use vars qw($VERSION @ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 
 require Exporter;
 require DynaLoader;
@@ -12,13 +12,39 @@ require AutoLoader;
 # names by default without a very good reason. Use EXPORT_OK instead.
 # Do not simply export all your public functions/methods/constants.
 @EXPORT = qw(
+    TEXT_TO_RIGHT
+    TEXT_TO_LEFT
+    TEXT_TO_UP
+    TEXT_TO_DOWN
+    TEXT_TO_ANGLE
 );
-$VERSION = '0.02';
+$VERSION = '0.03';
+
+sub AUTOLOAD {
+    # This AUTOLOAD is used to 'autoload' constants from the constant()
+    # XS function.  If a constant is not found then control is passed
+    # to the AUTOLOAD in AutoLoader.
+
+    my($constname);
+    ($constname = $AUTOLOAD) =~ s/.*:://;
+    my $val = constant($constname, @_ ? $_[0] : 0);
+    if ($! != 0) {
+        if ($! =~ /Invalid/) {
+            $AutoLoader::AUTOLOAD = $AUTOLOAD;
+            goto &AutoLoader::AUTOLOAD;
+        }
+        else {
+            my($pack,$file,$line) = caller;
+            die "Your vendor has not defined Imlib2 macro $pack\:\:$constname, used at $file line $line.\n";
+        }
+    }
+    eval "sub $AUTOLOAD { $val }";
+    goto &$AUTOLOAD;
+}
 
 bootstrap Image::Imlib2 $VERSION;
 
 # Preloaded methods go here.
-
 # Autoload methods go after =cut, and are processed by the autosplit program.
 
 1;
@@ -51,6 +77,33 @@ Image::Imlib2 - Interface to the Imlib2 image library
   # save out
   $image->save('out.png');
 
+  # create a polygon
+  my $poly = Image::Imlib2::Polygon->new();
+
+  # add some points
+  $poly->add_point(0, 0);
+  $poly->add_point(100, 0);
+  $poly->add_point(100, 100);
+  $poly->add_point(0, 100);
+
+  # fill the polygon
+  $poly->fill();
+
+  # draw it closed on image
+  $image->draw_polygon($poly, 1);
+
+  # create a color range
+  my $cr = Image::Imlib2::ColorRange->new();
+
+  # add a color
+  my ($distance, $red, $green, $blue, $alpha) = (15, 200, 100, 50, 20);
+  $cr->add_color($distance, $red, $green, $blue, $alpha);
+
+  # draw it
+  my($x, $y, $width, $height, $angle) = (20, 30, 200, 200, 1);
+  $image->fill_color_range_rectangle($cr, $x, $y,
+                                     $width, $height, $angle);
+
 =head1 DESCRIPTION
 
 B<Image::Imlib2> is a Perl port of Imlib2, a graphics library that
@@ -58,6 +111,10 @@ does image file loading and saving as well as manipulation, arbitrary
 polygon support, etc. It does ALL of these operations FAST. It allows
 you to create colour images using a large number of graphics
 primitives, and output the images in a range of formats.
+
+Image::Imlib2::Polygon and Image::Imlib2::ColorRange are described
+following Image::Imlib2 but may be referenced before their
+description.
 
 Note that this is an early version of my attempt at a Perl interface
 to Imlib2. Currently, the API is just to test things out. Not
@@ -69,7 +126,18 @@ Note that a development version of Imlib2 must be installed before
 installing this module: see the README file in the Image::Imlib2
 package.
 
-=head1 METHODS
+=head1 Exported constants
+
+    TEXT_TO_RIGHT
+    TEXT_TO_LEFT
+    TEXT_TO_UP
+    TEXT_TO_DOWN
+    TEXT_TO_ANGLE
+
+To be used as the direction parameter for text functions that
+accept it.
+
+=head1 METHODS (Image::Imlib2)
 
 =head2 new
 
@@ -174,19 +242,25 @@ for colours.
 
   $image->load_font("cinema/20");
 
-=head2 get_font_size (text)
+=head2 get_font_size (text, direction, angle)
 
 This function returns the width and height in pixels the text string
-would use up if drawn with the current font.
+would use up if drawn with the current font.  direction and angle
+are optional and deault to TEXT_TO_RIGHT and 0, respectively.
 
   my($w, $h) = $image->get_text_size("Imlib2 and Perl!");
+  my($w1, $w2) = $image->get_text_size("Crazy text",
+                                       TEXT_TO_UP, 1);
 
-=head2 draw_text (x, y, text)
+=head2 draw_text (x, y, text, direction, angle)
 
 This draws the text using the current font and colour onto the image
-at position (x, y).
+at position (x, y).  direction and angle are optional and deault to
+TEXT_TO_RIGHT and 0, respectively.
 
   $image->draw_text(50, 50, "Groovy, baby, yeah!");
+  $image->draw_text(50, 50, "Sweet, baby, yeah!",
+                    TEXT_TO_UP, 1.571);
 
 =head2 crop (x, y, w, h)
 
@@ -205,9 +279,64 @@ destination alpha channel is left untouched.
 
   $image->blend($cropped_image, 0, 0, 0, 50, 50, 200, 0, 50, 50);
 
+=head2 draw_polygon (polygon, closed)
+
+This will draw polygon (of type Imlib2::Image::Polygon) on the the image.
+The the polygon is drawn closed is closed is 1 and open if closed is 0.
+
+  $image->draw_polygon($poly, 1);
+
+=head2 fill_color_range_rectangle(color_range, x, y, w, h, angle);
+
+This uses the color range color_range to fille a rectangle with points
+x, y, x+width, y+width.
+
+  $image->fill_color_range_rectangle($cr, 10, 20, 100, 150, 0);
+
+
+=head1 METHODS (Image::Imlib2::Polygon)
+
+=head2 new
+
+This will create a new polygon for use with Image::Imlib2::draw_polygon.
+
+  my $poly = Image::Imlib2::Polygon->new();
+
+=head2 add_point (x, y)
+
+Adds a point to the polygonal construct.
+
+  $poly->add_point(10,10);
+
+=head2 fill
+
+Fills polygon in the current context.
+
+  $poly->fill();
+
+
+=head1 METHODS (Image::Imlib2::ColorRange)
+
+=head2 new
+
+Creates a new color range.
+
+  my $cr = Image::Imlib2::ColorRange->new();
+
+=head2 add_color (distance, red, green, blue, alpha)
+
+Similar to set_colour, but adds the color to the color range at the
+specified distance.
+
+  $cr->add_color(10, 255, 127, 0, 66);
+
 =head1 AUTHOR
 
 Leon Brocard, leon@astray.com
+
+=head1 CONTRIBUTORS
+
+Theo Schlossnagle, jesus@omniti.com
 
 =head1 COPYRIGHT
 

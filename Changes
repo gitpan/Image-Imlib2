@@ -1,5 +1,10 @@
 Revision history for Perl extension Image::Imlib2.
 
+0.03  Sat Sep  7 10:00:06 BST 2002
+        - incorporate color ranges, polygons and updated docs
+	  thanks to Theo Schlossnagle
+	- better warning if imlib2 hasn't been installed
+
 0.02  Wed Aug 29 10:40:56 BST 2001
 	- mention that imlib2 is out. I intend to rewrite this with
 	  Inline::C to make it more maintainable
