@@ -54,6 +54,10 @@ Imlib2_new(packname="Image::Imlib2", x=256, y=256)
 		Imlib_Image image;
 
 		image = imlib_create_image(x, y);
+
+		imlib_context_set_image(image);
+		imlib_image_set_has_alpha(1);
+
 		RETVAL = image;
 	}
         OUTPUT:
@@ -593,6 +597,34 @@ Image::Imlib2 Imlib2_flip_diagonal(image)
 		imlib_context_set_image(image);
 		imlib_image_flip_diagonal();
 	}
+
+
+int
+Imlib2_has_alpha(image, ...)
+	Image::Imlib2	image
+
+        PREINIT: 
+        char   value;
+        
+        PROTOTYPE: $;$
+
+        CODE:
+	{
+		imlib_context_set_image(image);
+
+		if (items > 1) {
+		  value =  SvTRUE(ST(1))?1:0;
+		  imlib_image_set_has_alpha(value);
+		}
+
+		RETVAL = imlib_image_has_alpha();
+	}
+
+        OUTPUT:
+                RETVAL
+
+
+
 
 MODULE = Image::Imlib2	PACKAGE = Image::Imlib2::Polygon	PREFIX= Imlib2_Polygon_
 

@@ -1,5 +1,12 @@
 Revision history for Perl extension Image::Imlib2.
 
+1.04 Thu Feb  3 15:27:41 GMT 2005
+	- Imlib2 1.1.2 broke our tests as it doesn't enable alpha by
+          default (for optimisation purposes). The module now enables
+          alpha by default when you create an image, but you can turn
+          it off with has_alpha (thanks to Don Armstrong)
+	- tested with Imlib2 1.2.0
+
 1.03 Tue Jul 13 11:30:47 IST 2004
 	- fixed minor POD tyop
 	- new flip_horizontal, flip_vertical, flip_diagonal (thanks to

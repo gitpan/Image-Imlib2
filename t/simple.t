@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 use strict;
-use Test::More tests => 7;
+use Test::More tests => 9;
 
 use_ok('Image::Imlib2');
 
@@ -14,6 +14,9 @@ is($image->get_width, 580);
 
 # Is it the right height?
 is($image->get_height, 200);
+
+# Is alpha on by default?
+is($image->has_alpha, 1);
 
 # Does set_colour work?
 $image->set_colour(255, 0, 0, 255);
@@ -67,5 +70,9 @@ $image->image_orientate(1);
 
 # create a scaled image of it
 my $dstimage = $image->create_scaled_image(100,80);
+
+# Does has_alpha work?
+$image->has_alpha(0);
+is($image->has_alpha, 0);
 
 ok(1, "got to the end")

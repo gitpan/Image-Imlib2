@@ -18,7 +18,7 @@ require AutoLoader;
     TEXT_TO_DOWN
     TEXT_TO_ANGLE
 );
-$VERSION = '1.03';
+$VERSION = '1.04';
 
 sub AUTOLOAD {
     # This AUTOLOAD is used to 'autoload' constants from the constant()
@@ -61,6 +61,9 @@ Image::Imlib2 - Interface to the Imlib2 image library
 
   # create a new image
   my $image = Image::Imlib2->new(200, 200);
+
+  # Enable the alpha channel support
+  $image->has_alpha(1);
 
   # set a colour (rgba, so this is transparent orange)
   $image->set_color(255, 127, 0, 127);
@@ -162,7 +165,7 @@ format has not been set using image_set_format().
 
   $image->save("out.png");
 
-=head2 image_set_format (format)                                               
+=head2 image_set_format (format)
 
 This will set the image format for future save operations. format is a
 string and may be "jpeg", "tiff", "png", etc. The exact number of
@@ -350,6 +353,17 @@ This will flip/mirror the current image diagonally (good for quick and dirty
 
   $image->flip_diagonal();
 
+=head2 has_alpha (BOOLEAN)
+
+Queries and/or sets the alpha support flag for the image. Note that
+alpha is on by default when you create an image:
+
+   if ($image->has_alpha) {
+      # do something requiring alpha support
+   }
+   # Enable the alpha channel
+   $image->has_alpha(1);
+
 =head1 METHODS (Image::Imlib2::Polygon)
 
 =head2 new
@@ -401,13 +415,9 @@ Returns the current height of the image.
 
 Leon Brocard, leon@astray.com
 
-=head1 CONTRIBUTORS
-
-Sebastian Bohm, Theo Schlossnagle, Joel Rowbottom
-
 =head1 COPYRIGHT
 
-Copyright (c) 2000-3 Leon Brocard. All rights reserved. This program is
+Copyright (c) 2000-5 Leon Brocard. All rights reserved. This program is
 free software; you can redistribute it and/or modify it under the same
 terms as Perl itself.
 

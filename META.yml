@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name: Image-Imlib2
-version: 1.03
+version: 1.04
 author:
   - Leon Brocard, leon@astray.com
 abstract: Interface to the Imlib2 image library
@@ -11,5 +11,5 @@ requires:
 provides:
   Image::Imlib2:
     file: lib/Image/Imlib2.pm
-    version: 1.03
-generated_by: Module::Build version 0.25
+    version: 1.04
+generated_by: Module::Build version 0.2605
