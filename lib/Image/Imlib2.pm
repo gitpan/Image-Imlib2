@@ -18,7 +18,7 @@ require AutoLoader;
     TEXT_TO_DOWN
     TEXT_TO_ANGLE
 );
-$VERSION = '1.00';
+$VERSION = '1.01';
 
 sub AUTOLOAD {
     # This AUTOLOAD is used to 'autoload' constants from the constant()
@@ -355,6 +355,18 @@ Similar to set_colour, but adds the color to the color range at the
 specified distance.
 
   $cr->add_color(10, 255, 127, 0, 66);
+
+=head2 get_width
+
+Returns the current width of the image.
+
+  my $width = $image->get_width;
+
+=head2 get_height
+
+Returns the current height of the image.
+
+  my $height = $image->get_height;
 
 =head1 AUTHOR
 

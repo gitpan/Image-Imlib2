@@ -1,5 +1,10 @@
 Revision history for Perl extension Image::Imlib2.
 
+1.01 Mon Nov  3 19:18:14 GMT 2003
+	- document get_width and get_height methods (thanks to Andreas
+	Plesner)
+	- added NINJA support
+
 1.00 Sun Sep 14 09:47:42 BST 2003
 	- applied patch to make the module work under threaded perls
 	  (thanks to Mathieu Jondet, Andreas Plesner Jacobsen, zak3)

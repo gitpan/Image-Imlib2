@@ -4,14 +4,13 @@ MANIFEST
 MANIFEST.SKIP
 Makefile.PL
 META.yml
+NINJA
 README
-SIGNATURE
 examples/benchmark.pl
 examples/benchmark.txt
 examples/maeda.pl
 lib/Image/Imlib2.pm
 lib/Image/Imlib2.xs
 lib/Image/ppport.h
-t/signature.t
 t/simple.t
 typemap

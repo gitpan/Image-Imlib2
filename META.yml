@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name: Image-Imlib2
-version: 1.00
+version: 1.01
 license: perl
 distribution_type: module
 requires:
@@ -12,5 +12,5 @@ conflicts: {}
 provides:
   Image::Imlib2:
     file: lib/Image/Imlib2.pm
-    version: 1.00
-generated_by: Module::Build version 0.20
+    version: 1.01
+generated_by: Module::Build version 0.21
