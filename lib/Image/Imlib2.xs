@@ -89,8 +89,24 @@ Imlib2_load(packname="Image::Imlib2", filename)
         CODE:
 	{
 		Imlib_Image image;
+                Imlib_Load_Error err;
 
-		image = imlib_load_image(filename);
+                image = imlib_load_image_with_error_return (filename, &err);
+                if (err == IMLIB_LOAD_ERROR_FILE_DOES_NOT_EXIST) {
+                  Perl_croak("Image::Imlib2 load error: File does not exist");
+                } 
+
+                if (err == IMLIB_LOAD_ERROR_FILE_IS_DIRECTORY) {
+                  Perl_croak("Image::Imlib2 load error: File is directory");
+                } 
+
+                if (err == IMLIB_LOAD_ERROR_PERMISSION_DENIED_TO_READ) {
+                  Perl_croak("Image::Imlib2 load error: Permission denied");
+                } 
+
+                if (err == IMLIB_LOAD_ERROR_NO_LOADER_FOR_FILE_FORMAT) {
+                  Perl_croak("Image::Imlib2 load error: No loader for file format");
+                }
 		RETVAL = image;
 	}
         OUTPUT:
@@ -106,10 +122,17 @@ Imlib2_save(image, filename)
 
         CODE:
 	{
-		imlib_context_set_image(image);
+                Imlib_Load_Error err;
 
-		imlib_save_image(filename);
+		imlib_context_set_image(image);
+		imlib_save_image_with_error_return(filename, &err);
+
+                if (err != IMLIB_LOAD_ERROR_NONE) {
+                  Perl_croak("Image::Imlib2 save error: Unknown error");
+                }
 	}
+
+
 
 
 int
@@ -487,6 +510,15 @@ void Imlib2_image_orientate(image, steps)
 		imlib_image_orientate(steps);
 	}
 
+void Imlib2_image_set_format(image, format)
+  Image::Imlib2  image
+  char *   format
+  PROTOTYPE: $$
+        CODE:
+  {
+     imlib_context_set_image(image);
+     imlib_image_set_format(format);
+  }
 
 Image::Imlib2 Imlib2_create_scaled_image(image, dw, dh)
         Image::Imlib2	image

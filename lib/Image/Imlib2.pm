@@ -18,7 +18,7 @@ require AutoLoader;
     TEXT_TO_DOWN
     TEXT_TO_ANGLE
 );
-$VERSION = '0.11';
+$VERSION = '0.12';
 
 sub AUTOLOAD {
     # This AUTOLOAD is used to 'autoload' constants from the constant()
@@ -154,10 +154,18 @@ object. It reads quite a few different image formats.
 
 =head2 save
 
-This saves the current image out. Currently this is always in PNG
-format.
+This saves the current image out. Currently this is in PNG if the
+format has not been set using image_set_format().
 
   $image->save("out.png");
+
+=head2 image_set_format (format)                                               
+
+This will set the image format for future save operations. format is a
+string and may be "jpeg", "tiff", "png", etc. The exact number of
+formats supported depends on how you built imlib2.
+
+  $image->image_set_format("jpeg"); # Convert image to JPG
 
 =head2 set_color (r, g, b, a) or set_colour (r, g, b, a)
 

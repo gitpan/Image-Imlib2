@@ -65,8 +65,7 @@ DESCRIPTION
     think the API can be tweaked to be a bit more intuitive, drop me a line!
 
     Note that a development version of Imlib2 must be installed before
-    installing this module: see the README file in the Image::Imlib2
-    package.
+    installing this module.
 
 Exported constants
         TEXT_TO_RIGHT
@@ -79,28 +78,31 @@ Exported constants
 
 METHODS (Image::Imlib2)
   new
-
     This will create a new, blank image. If the dimensions aren't specified,
     it will default to 256 x 256.
 
       my $image = new Image::Imlib2->new(100, 100)
 
   load
-
     This will load an existing graphics file and create a new image object.
     It reads quite a few different image formats.
 
       my $image = Image::Imlib2->load("foo.png");
 
   save
-
-    This saves the current image out. Currently this is always in PNG
-    format.
+    This saves the current image out. Currently this is in PNG if the format
+    has not been set using image_set_format().
 
       $image->save("out.png");
 
-  set_color (r, g, b, a) or set_colour (r, g, b, a)
+  image_set_format (format)
+    This will set the image format for future save operations. format is a
+    string and may be "jpeg", "tiff", "png", etc. The exact number of
+    formats supported depends on how you built imlib2.
 
+      $image->image_set_format("jpeg"); # Convert image to JPG
+
+  set_color (r, g, b, a) or set_colour (r, g, b, a)
     This sets the colour that the drawing primitives will use. You specify
     the red, green, blue and alpha components, which should all range from 0
     to 255. The alpha component specified how transparent the colour is: 0
@@ -116,7 +118,6 @@ METHODS (Image::Imlib2)
       $image->set_colour(255, 127,   0, 127); # transparent orange
 
   draw_point (x, y)
-
     This colours a point in the image in the currently-selected colour. Note
     that the coordinate system used has (0, 0) at the top left, with (50, 0)
     to the right of the top left, (0, 50) below the top left, and (50, 50)
@@ -124,29 +125,31 @@ METHODS (Image::Imlib2)
 
       $image->draw_point(50, 50);
 
-  draw_line (x1, y1, x2, y2)
+  query_pixel (x, y)
+    This returns the colour of a pixel in the image. It returns the red,
+    green, blue and alpha components:
 
+      my($r, $g, $b, $a) = $image->query_pixel(50,50);
+
+  draw_line (x1, y1, x2, y2)
     This draws a line between two points in the currently-selected colour.
     The following draws between the (0, 0) and (100, 100) points:
 
       $image->draw_line(0, 0, 100, 100);
 
   draw_rectangle (x, y, w, h)
-
     This draws a the outline of a rectangle with the top left point at (x,
     y) and having width w and height h in the current colour.
 
       $image->draw_rectangle(0, 0, 50, 50);
 
   fill_rectangle (x, y, w, h)
-
     This draws a filled rectangle with the top left point at (x, y) and
     having width w and height h in the current colour.
 
       $image->fill_rectangle(0, 0, 50, 50);
 
   draw_ellipse (x, y, w, h)
-
     This draws an ellipse which has center (x, y) and horizontal amplitude
     of w and vertical amplitude of h in the current colour. Note that
     setting w and h to the same value will draw a circle.
@@ -154,7 +157,6 @@ METHODS (Image::Imlib2)
       $image->draw_ellipse(100, 100, 50, 50);
 
   fill_ellipse (x, y, w, h)
-
     This draws a filled ellipse which has center (x, y) and horizontal
     amplitude of w and vertical amplitude of h in the current colour. Note
     that setting w and h to the same value will draw a filled circle.
@@ -162,14 +164,12 @@ METHODS (Image::Imlib2)
       $image->fill_ellipse(100, 100, 50, 50);
 
   add_font_path (dir)
-
     This function adds the directory path to the end of the current list of
     directories to scan for truetype (TTF) fonts.
 
       $image->add_font_path("./ttfonts");
 
   load_font (font)
-
     This function will load a truetype font from the first directory in the
     font path that contains that font. The font name format is
     "font_name/size". For example. If there is a font file called cinema.ttf
@@ -182,7 +182,6 @@ METHODS (Image::Imlib2)
       $image->load_font("cinema/20");
 
   get_font_size (text, direction, angle)
-
     This function returns the width and height in pixels the text string
     would use up if drawn with the current font. direction and angle are
     optional and deault to TEXT_TO_RIGHT and 0, respectively.
@@ -192,7 +191,6 @@ METHODS (Image::Imlib2)
                                            TEXT_TO_UP, 1);
 
   draw_text (x, y, text, direction, angle)
-
     This draws the text using the current font and colour onto the image at
     position (x, y). direction and angle are optional and deault to
     TEXT_TO_RIGHT and 0, respectively.
@@ -202,14 +200,12 @@ METHODS (Image::Imlib2)
                         TEXT_TO_UP, 1.571);
 
   crop (x, y, w, h)
-
     This creates a duplicate of a x, y, width, height rectangle in the
     current image and returns another image.
 
       my $cropped_image = $image->crop(0, 0, 50, 50);
 
   blend (source_image, merge_alpha, sx, sy, sw, sh, dx, dy, dw, dh)
-
     This will blend the source rectangle x, y, width, height from the
     source_image onto the current image at the destination x, y location
     scaled to the width and height specified. If merge_alpha is set to 1 it
@@ -219,7 +215,6 @@ METHODS (Image::Imlib2)
       $image->blend($cropped_image, 0, 0, 0, 50, 50, 200, 0, 50, 50);
 
   draw_polygon (polygon, closed)
-
     This will draw polygon (of type Imlib2::Image::Polygon) on the the
     image. The the polygon is drawn closed is closed is 1 and open if closed
     is 0.
@@ -227,55 +222,47 @@ METHODS (Image::Imlib2)
       $image->draw_polygon($poly, 1);
 
   fill_color_range_rectangle(color_range, x, y, w, h, angle);
-
     This uses the color range color_range to fille a rectangle with points
     x, y, x+width, y+width.
 
       $image->fill_color_range_rectangle($cr, 10, 20, 100, 150, 0);
 
   image_orientate (steps)
-
     This will rotate the image by steps*90 degrees, so to rotate by 90
     degrees set to 1, for 180 degrees set to 2, etc.
 
       $image->image_orientate(1);                    # Rotate by 90 degrees.
 
   create_scaled_image (x, y)
-
     Create a new image, scaled from the original to the dimensions given in
     x and y. If x or y are 0, then retain the aspect ratio given in the
     other.
 
       $image2=$image->create_scaled_image(100,100);  # Scale to 100x100 pixels
- 
+
 METHODS (Image::Imlib2::Polygon)
   new
-
     This will create a new polygon for use with Image::Imlib2::draw_polygon.
 
       my $poly = Image::Imlib2::Polygon->new();
 
   add_point (x, y)
-
     Adds a point to the polygonal construct.
 
       $poly->add_point(10,10);
 
   fill
-
     Fills polygon in the current context.
 
       $poly->fill();
 
 METHODS (Image::Imlib2::ColorRange)
   new
-
     Creates a new color range.
 
       my $cr = Image::Imlib2::ColorRange->new();
 
   add_color (distance, red, green, blue, alpha)
-
     Similar to set_colour, but adds the color to the color range at the
     specified distance.
 
@@ -285,10 +272,10 @@ AUTHOR
     Leon Brocard, leon@astray.com
 
 CONTRIBUTORS
-    Theo Schlossnagle, Joel Rowbottom
+    Sebastian Bohm, Theo Schlossnagle, Joel Rowbottom
 
 COPYRIGHT
-    Copyright (c) 2000-2 Leon Brocard. All rights reserved. This program is
+    Copyright (c) 2000-3 Leon Brocard. All rights reserved. This program is
     free software; you can redistribute it and/or modify it under the same
     terms as Perl itself.
 

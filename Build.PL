@@ -25,10 +25,12 @@ my $cflags = `$CONFIG --cflags`;
 my $build = Module::Build->new(
   module_name => 'Image::Imlib2',
   license     => 'perl',
+  create_makefile_pl => 'passthrough',
   requires    => {
     'Test::More' => '0.01',
   },
   extra_linker_flags => $libs,
   cc_flags => $cflags,
+  c_source     => './lib/Image',                                               
 );
 $build->create_build_script;

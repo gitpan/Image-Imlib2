@@ -14,26 +14,26 @@ not run its Makefile.PL or Build.PL.
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA1
 
-SHA1 c8b17dc206086e17e381cd8990f24a8099918d2e Build.PL
-SHA1 994083c315414320440374bad8dd66903d4f2010 Changes
+SHA1 4a0104020ea5d6bed08177622ab6b47fcd06b0f6 Build.PL
+SHA1 6fd48f72b76bd910f01ec093ad07c49f77a7df10 Changes
 SHA1 6e25dd36b402086b6837b6e62a6b0a4508cd1ce7 MANIFEST
 SHA1 4c14e41019966434e2bbad3d2c13de72fc843970 MANIFEST.SKIP
-SHA1 aad5daad3b6b7612a91ac0cb01cf5cd0429b1227 META.yml
-SHA1 2dc14de6f64f6a78203ef1cb74510501bd769a00 Makefile.PL
-SHA1 27097e743779a9514eb6b67e1a33e8fe0e14d2cd README
+SHA1 794a6910f4703d9167d28fd956ca6c4064b77132 META.yml
+SHA1 1849b2e69cd3bf568e221f73cf6e91ebae6489c0 Makefile.PL
+SHA1 9ab5f19a2b6bf070b344b4067bdad392d36cb3ec README
 SHA1 d2c3f63c36ecc5ece90d8c4a6c10ecd83f012601 examples/benchmark.pl
 SHA1 86d168595fb7674d2bfebe6f0d51dbcea750f72f examples/benchmark.txt
 SHA1 60d5fff044c37d40fc06858ba92827ea1aff7514 examples/maeda.pl
-SHA1 f4cb82689822bffa2fc722ed334c4d3e69748156 lib/Image/Imlib2.pm
-SHA1 94ccd8623901ba4cd52ce1b3ba47f0717fc0ee74 lib/Image/Imlib2.xs
+SHA1 b0f586c6c73aa7f2f3cf4a73a568d5bba80e2c50 lib/Image/Imlib2.pm
+SHA1 acb31c4ba94f7ca543270f3ee4b7ad073dff8ecb lib/Image/Imlib2.xs
 SHA1 287b0b43987f44fd6832f0ec0f4b20bc52025eae lib/Image/ppport.h
 SHA1 48e3ee556e3dd70385383ce4e8eaf0eb4580b6eb t/signature.t
 SHA1 c823ef1b56cab8bc37d45cc508dd655a5ba9b059 t/simple.t
 SHA1 3d9561d013bfc3868dbb2bb8a1d42e1ba3dba1e7 typemap
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.1 (GNU/Linux)
+Version: GnuPG v1.2.2 (GNU/Linux)
 
-iD8DBQE+fhkssgWvvfGvuWoRAlQjAJwPv4OONWoxq0PTTGeViFS5GckPFwCgsgsl
-FbE4sNkXs1Tn0SrHwjowX6g=
-=c7ls
+iD8DBQE/Uh1ksgWvvfGvuWoRAniuAJ9TDyzvsJyR0aC++5kWtKuPTjV0/wCgyZMX
+SkzeDDSinjDSohjQBZUcuaM=
+=hSTm
 -----END PGP SIGNATURE-----

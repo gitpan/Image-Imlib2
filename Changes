@@ -1,7 +1,15 @@
 Revision history for Perl extension Image::Imlib2.
 
+0.12 Sun Aug 31 16:07:52 BST 2003
+	- now use c_source to find ppport.h thanks to Mathieu Jondet
+	- use Build.PL's passthrough mechanism to generate the
+	  Makefile.PL
+	- now report loading and saving errors, as suggested by
+	  michael j pan
+	- added image_set_format thanks to Joel Rowbottom
+
 0.11 Sun Mar 23 19:06:29 GMT 2003
-        - Added query_pixel thanks to Sebastian Bohm
+        - Added query_pixel thanks to Sebastian BoeBhm
 	- Changed test suite to use Test::More
 	- The module is now built with Module::Build
 
