@@ -1,0 +1,69 @@
+Image::Imlib2
+
+Image::Imlib2 is a Perl port of Imlib2, a graphics library that does
+image file loading and saving as well as manipulation, arbitrary
+polygon support, etc. It does ALL of these operations FAST. It allows
+you to create colour images using a large number of graphics
+primitives, and output the images in a range of formats.
+
+
+NOTES
+
+Note that this is the first version of my attempt at a Perl interface
+to Imlib2. Currently, the API is just to test things out. Not
+everything is supported, but a great deal of functionality already
+exists. If you think the API can be tweaked to be a bit more
+intuitive, drop me a line!
+
+
+INSTALLATION
+
+Note that a development version of Imlib2 must be installed before
+installing this module. In order to do this, please follow these steps:
+
+export CVSROOT=":pserver:anonymous@cvs.enlightenment.org:/cvs/enlightenment"
+cvs login # hit return after this when you get a password prompt
+cvs -z3 co edb
+cvs -z3 co imlib2
+
+cd edb/
+./autogen.sh
+make
+make install
+
+cd ../imlib2
+./autogen.sh
+make
+make install
+
+... and that should install the Imlib2 C library for you.
+
+You install Image::Imlib2, as you would install any Perl module
+library, by running these commands:
+
+   perl Makefile.PL
+   make
+   make test     
+   make install
+
+If you want to install a private copy of Image::Imlib2 in your home
+directory, then you should try to produce the initial Makefile with
+something like this command:
+
+  perl Makefile.PL LIB=~/perl
+
+
+DOCUMENTATION
+
+POD-format documentation is included in Imlib2.pm. POD is readable
+with the 'perldoc' utility, as 'perldoc Image::Imlib2'.
+
+
+SUPPORT
+
+Questions, comments, bugfixes, flames, and other administrivia
+pertaining to Image::Imlib2 should be sent to me at leon@astray.com
+
+
+
+

@@ -1,0 +1,12 @@
+Changes
+Imlib2.pm
+Imlib2.xs
+MANIFEST
+Makefile.PL
+README
+examples/benchmark.pl
+examples/benchmark.txt
+examples/maeda.pl
+ppport.h
+test.pl
+typemap
