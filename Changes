@@ -1,5 +1,9 @@
 Revision history for Perl extension Image::Imlib2.
 
+0.10 Mon Sep 16 15:57:04 BST 2002
+	- Added image_orientate, create_scaled_image
+	  thanks to Joel Rowbottom
+
 0.03  Sat Sep  7 10:00:06 BST 2002
         - incorporate color ranges, polygons and updated docs
 	  thanks to Theo Schlossnagle

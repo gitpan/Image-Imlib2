@@ -18,7 +18,7 @@ require AutoLoader;
     TEXT_TO_DOWN
     TEXT_TO_ANGLE
 );
-$VERSION = '0.03';
+$VERSION = '0.10';
 
 sub AUTOLOAD {
     # This AUTOLOAD is used to 'autoload' constants from the constant()
@@ -294,6 +294,20 @@ x, y, x+width, y+width.
   $image->fill_color_range_rectangle($cr, 10, 20, 100, 150, 0);
 
 
+=head2 image_orientate (steps)
+
+This will rotate the image by steps*90 degrees, so to rotate by 90 degrees
+set to 1, for 180 degrees set to 2, etc.
+
+  $image->image_orientate(1);                    # Rotate by 90 degrees.
+
+=head2 create_scaled_image (x, y)
+
+Create a new image, scaled from the original to the dimensions given in x
+and y. If x or y are 0, then retain the aspect ratio given in the other.
+
+  $image2=$image->create_scaled_image(100,100);  # Scale to 100x100 pixels
+ 
 =head1 METHODS (Image::Imlib2::Polygon)
 
 =head2 new
@@ -336,11 +350,11 @@ Leon Brocard, leon@astray.com
 
 =head1 CONTRIBUTORS
 
-Theo Schlossnagle, jesus@omniti.com
+Theo Schlossnagle, Joel Rowbottom
 
 =head1 COPYRIGHT
 
-Copyright (c) 2000-1 Leon Brocard. All rights reserved. This program is
+Copyright (c) 2000-2 Leon Brocard. All rights reserved. This program is
 free software; you can redistribute it and/or modify it under the same
 terms as Perl itself.
 

@@ -3,7 +3,7 @@
 use strict;
 use Test;
 
-BEGIN { plan tests => 13 }
+BEGIN { plan tests => 15 }
 
 use Image::Imlib2;
 
@@ -67,5 +67,15 @@ $poly->fill();
 
 # draw it closed on image
 $image->draw_polygon($poly, 1);
-
 ok(1); # 13 coo, polygons, work
+
+# orientate it
+$image->image_orientate(1);
+ok(1); # 14
+
+# create a scaled image of it
+my $dstimage = $image->create_scaled_image(100,80);
+ok(1); # 15
+
+
+

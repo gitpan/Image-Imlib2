@@ -454,6 +454,51 @@ void Imlib2_fill_color_range_rectangle(image, cr, x, y, width, height, angle)
         }
 
 
+void Imlib2_image_orientate(image, steps)
+	Image::Imlib2	image
+	int	steps
+
+	PROTOTYPE: $$
+
+        CODE:
+	{
+		imlib_context_set_image(image);
+
+		imlib_image_orientate(steps);
+	}
+
+
+Image::Imlib2 Imlib2_create_scaled_image(image, dw, dh)
+        Image::Imlib2	image
+	int dw
+	int dh
+
+	PROTOTYPE: $$$
+
+        CODE:
+	{
+		Imlib_Image dstimage;
+		int sw, sh;
+
+		imlib_context_set_image(image);
+		sw = imlib_image_get_width();
+		sh = imlib_image_get_height();
+
+		if ( dw == 0 ) {
+			dw = (int) (((double) dh * sw) / sh);
+		}
+		if ( dh == 0 ) {
+			dh = (int) (((double) dw * sh) / sw);
+		}
+
+		dstimage = imlib_create_cropped_scaled_image(0, 0, sw, sh, dw, dh);
+
+		RETVAL = dstimage;
+	}
+        OUTPUT:
+	        RETVAL
+
+
 MODULE = Image::Imlib2	PACKAGE = Image::Imlib2::Polygon	PREFIX= Imlib2_Polygon_
 
 Image::Imlib2::Polygon
