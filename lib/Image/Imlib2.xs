@@ -4,7 +4,6 @@
 
 #include "ppport.h"
 
-#include <X11/Xlib.h>
 #include <Imlib2.h>
 #include <stdio.h>
 #include <string.h>
@@ -93,19 +92,19 @@ Imlib2_load(packname="Image::Imlib2", filename)
 
                 image = imlib_load_image_with_error_return (filename, &err);
                 if (err == IMLIB_LOAD_ERROR_FILE_DOES_NOT_EXIST) {
-                  Perl_croak("Image::Imlib2 load error: File does not exist");
+                  Perl_croak(aTHX_ "Image::Imlib2 load error: File does not exist");
                 } 
 
                 if (err == IMLIB_LOAD_ERROR_FILE_IS_DIRECTORY) {
-                  Perl_croak("Image::Imlib2 load error: File is directory");
+                  Perl_croak(aTHX_ "Image::Imlib2 load error: File is directory");
                 } 
 
                 if (err == IMLIB_LOAD_ERROR_PERMISSION_DENIED_TO_READ) {
-                  Perl_croak("Image::Imlib2 load error: Permission denied");
+                  Perl_croak(aTHX_ "Image::Imlib2 load error: Permission denied");
                 } 
 
                 if (err == IMLIB_LOAD_ERROR_NO_LOADER_FOR_FILE_FORMAT) {
-                  Perl_croak("Image::Imlib2 load error: No loader for file format");
+                  Perl_croak(aTHX_ "Image::Imlib2 load error: No loader for file format");
                 }
 		RETVAL = image;
 	}
@@ -128,7 +127,7 @@ Imlib2_save(image, filename)
 		imlib_save_image_with_error_return(filename, &err);
 
                 if (err != IMLIB_LOAD_ERROR_NONE) {
-                  Perl_croak("Image::Imlib2 save error: Unknown error");
+                  Perl_croak(aTHX_ "Image::Imlib2 save error: Unknown error");
                 }
 	}
 

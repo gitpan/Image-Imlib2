@@ -20,17 +20,18 @@ point to the imlib2-config program that provides.
 }
 
 my $libs = `$CONFIG --libs`;
-my $cflags = `$CONFIG --cflags`;
+my $cflags = "-DX_DISPLAY_MISSING " . `$CONFIG --cflags`;
 
 my $build = Module::Build->new(
-  module_name => 'Image::Imlib2',
-  license     => 'perl',
+  c_source     => './lib/Image',
   create_makefile_pl => 'passthrough',
+  extra_compiler_flags => $cflags,
+  extra_linker_flags => $libs,
+  license     => 'perl',
+  module_name => 'Image::Imlib2',
   requires    => {
+    'Module::Build' => '0.20',
     'Test::More' => '0.01',
   },
-  extra_linker_flags => $libs,
-  cc_flags => $cflags,
-  c_source     => './lib/Image',                                               
 );
 $build->create_build_script;

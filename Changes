@@ -1,5 +1,14 @@
 Revision history for Perl extension Image::Imlib2.
 
+1.00 Sun Sep 14 09:47:42 BST 2003
+	- applied patch to make the module work under threaded perls
+	  (thanks to Mathieu Jondet, Andreas Plesner Jacobsen, zak3)
+	- applied patch to make the module work without X (spotted by
+	  Mike Castle, Jens Gassmann)
+	- applied patch to pass the correct compiler flags (thanks to
+	  Christian Laursen)
+	- bumped up to version 1.00
+
 0.12 Sun Aug 31 16:07:52 BST 2003
 	- now use c_source to find ppport.h thanks to Mathieu Jondet
 	- use Build.PL's passthrough mechanism to generate the
