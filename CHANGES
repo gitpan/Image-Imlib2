@@ -1,5 +1,12 @@
 Revision history for Perl extension Image::Imlib2.
 
+1.05 Thu Apr  7 16:55:01 GMT 2005
+    - added support for defeating caching, namely:
+          set_cache_size
+          get_cache_size
+          set_changed_on_disk
+      (Thanks to Tom Insam and Mark Fowler)
+
 1.04 Thu Feb  3 15:27:41 GMT 2005
 	- Imlib2 1.1.2 broke our tests as it doesn't enable alpha by
           default (for optimisation purposes). The module now enables

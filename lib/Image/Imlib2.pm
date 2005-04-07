@@ -18,7 +18,7 @@ require AutoLoader;
     TEXT_TO_DOWN
     TEXT_TO_ANGLE
 );
-$VERSION = '1.04';
+$VERSION = '1.05';
 
 sub AUTOLOAD {
     # This AUTOLOAD is used to 'autoload' constants from the constant()
@@ -363,6 +363,51 @@ alpha is on by default when you create an image:
    }
    # Enable the alpha channel
    $image->has_alpha(1);
+
+=head2 set_cache_size (INT)
+
+By default, Imlib2 will cache all loaded images (up to some maximum cache
+size) and will use this cache to avoid loading images from disk.
+
+Sets the size of the image cache. Reducing this value will cause the cache to
+be emptied.  You can turn off caching all together by setting this to zero.
+
+Even without a cache, as long as you have a reference to an image in memory
+that image will be returned immediately without checking the disk.
+
+  my $image = Image::Imlib2->load("foo.jpg"); # image loaded from disk
+  ... later, somewhere else, after $image has gone away ...
+  my $image = Image::Imlib2->load("foo.jpg"); # same image, even if changed on disk
+  ... later, somewhere else, after $image has gone away ...
+  Image::Imlib2->set_cache_size(0);
+  my $image  = Image::Imlib2->load("foo.jpg"); # image loaded from disk  
+  my $image2 = Image::Imlib2->load("foo.jpg"); # same image as before, not reloaded 
+
+=head2 get_cache_size ()
+
+Returns the maximum size of the Image cache.
+
+=head2 set_changes_on_disk ()
+
+Called on an Image::Imlib2 instance that you have loaded from disk, this
+method tells imlib that it should take extra care when caching the image
+for this filename.  Next time the load method is called for this image's
+file name Imlib will  check the modification time for the file on disk
+compared to the cached version and take appropriate action.
+
+  my $image = Image::Imlib2->load("foo.jpg");
+  $image->set_changes_on_disk();
+
+  ...later...
+
+  # reloads image from disk if mod time has changed (otherwise use cached)
+  my $image = Image::Imlib2->load("foo.jpg"); 
+
+
+Calling
+this method on a loaded image tells Imlib2 to look at the disk and
+compare mtimes with it's loaded copy - by default, this is not the case,
+so even if a file changes on disk, it won't be re-loaded.
 
 =head1 METHODS (Image::Imlib2::Polygon)
 

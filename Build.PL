@@ -33,5 +33,6 @@ my $build = Module::Build->new(
     'Module::Build' => '0.20',
     'Test::More' => '0.01',
   },
+  add_to_cleanup => [qw( t/test1.jpg t/test2.jpg t/test3.jpg )],
 );
 $build->create_build_script;

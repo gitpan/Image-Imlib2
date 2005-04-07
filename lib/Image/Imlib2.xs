@@ -623,7 +623,43 @@ Imlib2_has_alpha(image, ...)
         OUTPUT:
                 RETVAL
 
+void
+Imlib2_set_cache_size(packname="Image::Imlib2", size)
+        char * packname
+        int size
+        
+        PROTOTYPE: $$
 
+        CODE:
+	{
+                imlib_set_cache_size(size);
+	}
+
+
+int
+Imlib2_get_cache_size(packname="Image::Imlib2")
+        char * packname
+        
+        PROTOTYPE: $
+
+        CODE:
+	{
+                RETVAL = imlib_get_cache_size();
+	}
+	OUTPUT:
+	        RETVAL
+
+void
+Imlib2_set_changes_on_disk(image)
+	Image::Imlib2	image
+        
+        PROTOTYPE: $
+
+        CODE:
+	{
+		imlib_context_set_image(image);
+                imlib_image_set_changes_on_disk();
+	}
 
 
 MODULE = Image::Imlib2	PACKAGE = Image::Imlib2::Polygon	PREFIX= Imlib2_Polygon_
