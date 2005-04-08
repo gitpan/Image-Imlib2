@@ -18,7 +18,7 @@ require AutoLoader;
     TEXT_TO_DOWN
     TEXT_TO_ANGLE
 );
-$VERSION = '1.05';
+$VERSION = '1.06';
 
 sub AUTOLOAD {
     # This AUTOLOAD is used to 'autoload' constants from the constant()

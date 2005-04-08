@@ -1,5 +1,8 @@
 Revision history for Perl extension Image::Imlib2.
 
+1.06 Fri Apr  8 22:58:26 CST 2005
+    - added missing test file to MANIFEST
+
 1.05 Thu Apr  7 16:55:01 GMT 2005
     - added support for defeating caching, namely:
           set_cache_size
