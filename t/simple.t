@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 use strict;
-use Test::More tests => 9;
+use Test::More tests => 12;
 
 use_ok('Image::Imlib2');
 
@@ -50,6 +50,17 @@ $image->draw_ellipse(50, 50, 25, 25);
 # Does fill_ellipse work?
 $image->fill_ellipse(50, 50, 25, 25);
 
+my $cloned = $image->clone;
+
+# Is it the right width?
+is($cloned->get_width, 580);
+
+# Is it the right height?
+is($cloned->get_height, 200);
+
+# Is alpha on by default?
+is($cloned->has_alpha, 1);
+
 # create a polygon
 my $poly = Image::Imlib2::Polygon->new();
 
@@ -67,6 +78,12 @@ $image->draw_polygon($poly, 1);
 
 # orientate it
 $image->image_orientate(1);
+
+# blur it
+$image->blur(1);
+
+# sharpen it
+$image->sharpen(1);
 
 # create a scaled image of it
 my $dstimage = $image->create_scaled_image(100,80);

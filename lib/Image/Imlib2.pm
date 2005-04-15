@@ -18,7 +18,7 @@ require AutoLoader;
     TEXT_TO_DOWN
     TEXT_TO_ANGLE
 );
-$VERSION = '1.06';
+$VERSION = '1.07';
 
 sub AUTOLOAD {
     # This AUTOLOAD is used to 'autoload' constants from the constant()
@@ -305,6 +305,25 @@ it will also modify the destination image alpha channel, otherwise the
 destination alpha channel is left untouched.
 
   $image->blend($cropped_image, 0, 0, 0, 50, 50, 200, 0, 50, 50);
+
+=head2 blur (radius)
+
+This will blur the image. A radius of 0 has no effect, 1 and above determine 
+the blur matrix radius that determine how much to blur the image.
+
+  $image->blur(1); 
+
+=head2 sharpen (radius)
+
+This sharpens the image. The radius affects how much to sharpen by.
+
+  $image->sharpen(1); 
+  
+=head2 clone ()
+
+This creates an exact duplicate of the current image.
+
+  $cloned = $image->clone;   
 
 =head2 draw_polygon (polygon, closed)
 

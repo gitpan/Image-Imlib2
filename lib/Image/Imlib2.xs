@@ -462,6 +462,53 @@ Imlib2_blend(image, source, alpha, x, y, w, h, d_x, d_y, d_w, d_h)
 	}
 
 
+void 
+Imlib2_blur(image, radius)
+	Image::Imlib2	image
+	int	radius
+
+	PROTOTYPE: $$
+
+        CODE:
+	{
+		imlib_context_set_image(image);
+		imlib_image_blur(radius);
+	}
+
+
+void 
+Imlib2_sharpen(image, radius)
+	Image::Imlib2	image
+	int	radius
+
+	PROTOTYPE: $$
+
+        CODE:
+	{
+		imlib_context_set_image(image);
+		imlib_image_sharpen(radius);
+	}
+
+
+Image::Imlib2 
+Imlib2_clone(image)
+	Image::Imlib2	image
+
+	PROTOTYPE: $
+
+        CODE:
+	{
+		Imlib_Image cloned;
+		
+		imlib_context_set_image(image);
+		cloned = imlib_clone_image();
+		
+		RETVAL = cloned;
+	}
+        OUTPUT:
+	        RETVAL	
+
+
 void
 Imlib2_draw_polygon(image, poly, closed)
         Image::Imlib2  image

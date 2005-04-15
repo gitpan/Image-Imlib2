@@ -7,6 +7,9 @@ SYNOPSIS
       # create a new image
       my $image = Image::Imlib2->new(200, 200);
 
+      # Enable the alpha channel support
+      $image->has_alpha(1);
+
       # set a colour (rgba, so this is transparent orange)
       $image->set_color(255, 127, 0, 127);
 
@@ -223,6 +226,23 @@ METHODS (Image::Imlib2)
 
       $image->blend($cropped_image, 0, 0, 0, 50, 50, 200, 0, 50, 50);
 
+  blur (radius)
+    This will blur the image. A radius of 0 has no effect, 1 and above
+    determine the blur matrix radius that determine how much to blur the
+    image.
+
+      $image->blur(1); 
+
+  sharpen (radius)
+    This sharpens the image. The radius affects how much to sharpen by.
+
+      $image->sharpen(1); 
+  
+  clone ()
+    This creates an exact duplicate of the current image.
+
+      $cloned = $image->clone;   
+
   draw_polygon (polygon, closed)
     This will draw polygon (of type Imlib2::Image::Polygon) on the the
     image. The the polygon is drawn closed is closed is 1 and open if closed
@@ -248,6 +268,75 @@ METHODS (Image::Imlib2)
     other.
 
       $image2=$image->create_scaled_image(100,100);  # Scale to 100x100 pixels
+
+  flip_horizontal ()
+    This will flip/mirror the image horizontally.
+
+      $image->flip_horizontal();
+
+  flip_vertical ()
+    This will flip/mirror the image vertically.
+
+      $image->flip_vertical();
+
+  flip_diagonal ()
+    This will flip/mirror the current image diagonally (good for quick and
+    dirty 90 degree rotations if used before to after a horizontal or
+    vertical flip).
+
+      $image->flip_diagonal();
+
+  has_alpha (BOOLEAN)
+    Queries and/or sets the alpha support flag for the image. Note that
+    alpha is on by default when you create an image:
+
+       if ($image->has_alpha) {
+          # do something requiring alpha support
+       }
+       # Enable the alpha channel
+       $image->has_alpha(1);
+
+  set_cache_size (INT)
+    By default, Imlib2 will cache all loaded images (up to some maximum
+    cache size) and will use this cache to avoid loading images from disk.
+
+    Sets the size of the image cache. Reducing this value will cause the
+    cache to be emptied. You can turn off caching all together by setting
+    this to zero.
+
+    Even without a cache, as long as you have a reference to an image in
+    memory that image will be returned immediately without checking the
+    disk.
+
+      my $image = Image::Imlib2->load("foo.jpg"); # image loaded from disk
+      ... later, somewhere else, after $image has gone away ...
+      my $image = Image::Imlib2->load("foo.jpg"); # same image, even if changed on disk
+      ... later, somewhere else, after $image has gone away ...
+      Image::Imlib2->set_cache_size(0);
+      my $image  = Image::Imlib2->load("foo.jpg"); # image loaded from disk  
+      my $image2 = Image::Imlib2->load("foo.jpg"); # same image as before, not reloaded 
+
+  get_cache_size ()
+    Returns the maximum size of the Image cache.
+
+  set_changes_on_disk ()
+    Called on an Image::Imlib2 instance that you have loaded from disk, this
+    method tells imlib that it should take extra care when caching the image
+    for this filename. Next time the load method is called for this image's
+    file name Imlib will check the modification time for the file on disk
+    compared to the cached version and take appropriate action.
+
+      my $image = Image::Imlib2->load("foo.jpg");
+      $image->set_changes_on_disk();
+
+      ...later...
+
+      # reloads image from disk if mod time has changed (otherwise use cached)
+      my $image = Image::Imlib2->load("foo.jpg"); 
+
+    Calling this method on a loaded image tells Imlib2 to look at the disk
+    and compare mtimes with it's loaded copy - by default, this is not the
+    case, so even if a file changes on disk, it won't be re-loaded.
 
 METHODS (Image::Imlib2::Polygon)
   new
@@ -290,11 +379,8 @@ METHODS (Image::Imlib2::ColorRange)
 AUTHOR
     Leon Brocard, leon@astray.com
 
-CONTRIBUTORS
-    Sebastian Bohm, Theo Schlossnagle, Joel Rowbottom
-
 COPYRIGHT
-    Copyright (c) 2000-3 Leon Brocard. All rights reserved. This program is
+    Copyright (c) 2000-5 Leon Brocard. All rights reserved. This program is
     free software; you can redistribute it and/or modify it under the same
     terms as Perl itself.
 
