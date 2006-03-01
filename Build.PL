@@ -11,7 +11,7 @@ Image::Imlib2. You can obtain imlib2 from
 http://sourceforge.net/projects/enlightenment/
 
 Alternatively, if you have downloaded and installed imlib2 and this
-still will not work, modify the $CONFIG variable inside Makefile.PL to
+still will not work, modify the $CONFIG variable inside Build.PL to
 point to the imlib2-config program that provides.
 ';
   exit;

@@ -1,15 +1,8 @@
 --- #YAML:1.0
 name: Image-Imlib2
-version: 1.07
+version: 1.08
 author:
   - Leon Brocard, leon@astray.com
 abstract: Interface to the Imlib2 image library
 license: perl
-requires:
-  Module::Build: 0.20
-  Test::More: 0.01
-provides:
-  Image::Imlib2:
-    file: lib/Image/Imlib2.pm
-    version: 1.07
-generated_by: Module::Build version 0.2605
+generated_by: Module::Build version 0.2611, without YAML.pm

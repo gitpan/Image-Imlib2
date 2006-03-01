@@ -1,7 +1,10 @@
 Revision history for Perl extension Image::Imlib2.
 
+1.08 Wed Mar  1 19:10:05 GMT 2006
+    - fix build instructions (noticed by JPIERCE)
+
 1.07 Fri Apr 15 11:57:47 BST 2005
-	- Add clone, sharpen and blur (thanks to Christian Hansen)
+    - Add clone, sharpen and blur (thanks to Christian Hansen)
 
 1.06 Fri Apr  8 22:58:26 CST 2005
     - added missing test file to MANIFEST
