@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 use strict;
-use Test::More tests => 12;
+use Test::More tests => 18;
 
 use_ok('Image::Imlib2');
 
@@ -91,5 +91,15 @@ my $dstimage = $image->create_scaled_image(100,80);
 # Does has_alpha work?
 $image->has_alpha(0);
 is($image->has_alpha, 0);
+
+eval { $image->not_a_method() };
+isnt( $@, '', 'not_a_method() blows up' );
+
+# since we're using use_ok, these aren't imported, so check them exactly
+ok(defined(Image::Imlib2::TEXT_TO_RIGHT()), "TEXT_TO_RIGHT");
+ok(defined(Image::Imlib2::TEXT_TO_LEFT()),  "TEXT_TO_LEFT");
+ok(defined(Image::Imlib2::TEXT_TO_UP()),    "TEXT_TO_UP");
+ok(defined(Image::Imlib2::TEXT_TO_DOWN()),  "TEXT_TO_DOWN");
+ok(defined(Image::Imlib2::TEXT_TO_ANGLE()), "TEXT_TO_ANGLE");
 
 ok(1, "got to the end")

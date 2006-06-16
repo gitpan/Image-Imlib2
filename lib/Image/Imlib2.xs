@@ -13,31 +13,51 @@ typedef ImlibPolygon Image__Imlib2__Polygon;
 typedef Imlib_Color_Range Image__Imlib2__ColorRange;
 
 static double
-constant(char *name, int arg)
+TEXT_TO_RIGHT(void)
 {
-    errno = 0;
-    switch (*name) {
-    case 'T':
-        if (strEQ(name, "TEXT_TO_RIGHT")) return IMLIB_TEXT_TO_RIGHT;
-        if (strEQ(name, "TEXT_TO_LEFT")) return IMLIB_TEXT_TO_LEFT;
-        if (strEQ(name, "TEXT_TO_UP")) return IMLIB_TEXT_TO_UP;
-        if (strEQ(name, "TEXT_TO_DOWN")) return IMLIB_TEXT_TO_DOWN;
-        if (strEQ(name, "TEXT_TO_ANGLE")) return IMLIB_TEXT_TO_ANGLE;
-        break;
-    }
-    return 0;
+   return IMLIB_TEXT_TO_RIGHT;
+}
 
-not_there:
-    errno = ENOENT;
-    return 0;
-}  
+static double
+TEXT_TO_LEFT(void)
+{
+   return IMLIB_TEXT_TO_LEFT;
+}
+
+static double
+TEXT_TO_UP(void)
+{
+   return IMLIB_TEXT_TO_UP;
+}
+
+static double
+TEXT_TO_DOWN(void)
+{
+   return IMLIB_TEXT_TO_DOWN;
+}
+
+static double
+TEXT_TO_ANGLE(void)
+{
+   return IMLIB_TEXT_TO_ANGLE;
+}
 
 MODULE = Image::Imlib2          PACKAGE = Image::Imlib2
 
 double
-constant(name,arg)
-        char *          name
-        int             arg
+TEXT_TO_RIGHT()
+
+double
+TEXT_TO_LEFT()
+
+double
+TEXT_TO_UP()
+
+double
+TEXT_TO_DOWN()
+
+double
+TEXT_TO_ANGLE()
 
 MODULE = Image::Imlib2		PACKAGE = Image::Imlib2		PREFIX= Imlib2_
 

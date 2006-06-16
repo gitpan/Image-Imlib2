@@ -5,7 +5,6 @@ use vars qw($VERSION @ISA @EXPORT @EXPORT_OK $AUTOLOAD);
 
 require Exporter;
 require DynaLoader;
-require AutoLoader;
 
 @ISA = qw(Exporter DynaLoader);
 # Items to export into callers namespace by default. Note: do not export
@@ -18,34 +17,9 @@ require AutoLoader;
     TEXT_TO_DOWN
     TEXT_TO_ANGLE
 );
-$VERSION = '1.08';
-
-sub AUTOLOAD {
-    # This AUTOLOAD is used to 'autoload' constants from the constant()
-    # XS function.  If a constant is not found then control is passed
-    # to the AUTOLOAD in AutoLoader.
-
-    my($constname);
-    ($constname = $AUTOLOAD) =~ s/.*:://;
-    my $val = constant($constname, @_ ? $_[0] : 0);
-    if ($! != 0) {
-        if ($! =~ /Invalid/) {
-            $AutoLoader::AUTOLOAD = $AUTOLOAD;
-            goto &AutoLoader::AUTOLOAD;
-        }
-        else {
-            my($pack,$file,$line) = caller;
-            die "Your vendor has not defined Imlib2 macro $pack\:\:$constname, used at $file line $line.\n";
-        }
-    }
-    eval "sub $AUTOLOAD { $val }";
-    goto &$AUTOLOAD;
-}
+$VERSION = '1.09';
 
 bootstrap Image::Imlib2 $VERSION;
-
-# Preloaded methods go here.
-# Autoload methods go after =cut, and are processed by the autosplit program.
 
 1;
 __END__

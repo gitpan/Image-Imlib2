@@ -1,5 +1,10 @@
 Revision history for Perl extension Image::Imlib2.
 
+1.09 Thu Jun 15 16:43:10 GMT 2006
+    - lose AUTOLOAD and define the constants in their own right
+      code by Mark Fowler. this also means that random calls for
+      non-existant methods fail properly now
+
 1.08 Wed Mar  1 19:10:05 GMT 2006
     - fix build instructions (noticed by JPIERCE)
 
