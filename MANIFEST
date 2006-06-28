@@ -12,5 +12,8 @@ META.yml
 NINJA
 README
 t/cache.t
+t/data.t
 t/simple.t
+t/pod.t
+t/pod_coverage.t
 typemap

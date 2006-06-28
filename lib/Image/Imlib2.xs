@@ -84,6 +84,52 @@ Imlib2_new(packname="Image::Imlib2", x=256, y=256)
 	        RETVAL
 
 
+Image::Imlib2
+Imlib2__new_using_data(packname="Image::Imlib2", x=256, y=256, data)
+        char * packname
+	int x
+	int y
+        DATA32 * data
+ 
+	PROTOTYPE: $;$$$
+ 
+        CODE:
+	{
+		Imlib_Image image;
+ 
+		image = imlib_create_image_using_copied_data(x, y, data);
+ 
+		imlib_context_set_image(image);
+		imlib_image_set_has_alpha(1);
+
+		RETVAL = image;
+	}
+        OUTPUT:
+	        RETVAL
+
+
+char
+Imlib2_will_blend(packname="Image::Imlib2", ...)
+        char * packname
+
+        PREINIT: 
+        char   value;
+        
+        PROTOTYPE: $;$
+
+        CODE:
+	{
+		if (items > 1) {
+		  value =  SvTRUE(ST(1))?1:0;
+		  imlib_context_set_blend(value);
+		}
+
+		RETVAL = imlib_context_get_blend();
+	}
+
+        OUTPUT:
+                RETVAL
+
 
 
 
@@ -176,7 +222,41 @@ Imlib2_get_width(image)
 
 
 int
+Imlib2_width(image)
+	Image::Imlib2	image
+
+        PROTOTYPE: $
+
+        CODE:
+	{
+		imlib_context_set_image(image);
+
+		RETVAL = imlib_image_get_width();
+	}
+
+        OUTPUT:
+                RETVAL
+
+
+int
 Imlib2_get_height(image)
+	Image::Imlib2	image
+
+        PROTOTYPE: $
+
+        CODE:
+	{
+		imlib_context_set_image(image);
+
+		RETVAL = imlib_image_get_height();
+	}
+
+        OUTPUT:
+                RETVAL
+
+
+int
+Imlib2_height(image)
 	Image::Imlib2	image
 
         PROTOTYPE: $
@@ -240,7 +320,7 @@ Imlib2_draw_point(image, x, y)
 	{
 		imlib_context_set_image(image);
 
-		imlib_image_draw_line(x, y, x, y, 0);
+		imlib_image_draw_pixel(x, y, 0);
 	}
 
 
@@ -727,6 +807,84 @@ Imlib2_set_changes_on_disk(image)
 		imlib_context_set_image(image);
                 imlib_image_set_changes_on_disk();
 	}
+
+
+Image::Imlib2
+Imlib2_create_transparent_image(source, alpha)
+        Image::Imlib2 source
+        int alpha
+
+        PROTOTYPE: $$
+
+	PREINIT:
+		Imlib_Image destination;
+		Imlib_Color color_return;
+                int x, y, w, h;
+
+        CODE:
+        {
+		imlib_context_set_image(source);
+		w = imlib_image_get_width();
+		h = imlib_image_get_height();
+
+                destination = imlib_create_image(w, h);
+		imlib_context_set_image(destination);
+		imlib_image_set_has_alpha(1);
+
+                for (y = 0; y < h; y++) {
+                  for (x = 0; x < w; x++)  {
+           	    imlib_context_set_image(source);
+                    imlib_image_query_pixel(x, y, &color_return);
+                    imlib_context_set_color(color_return.red, color_return.green, color_return.blue, alpha);
+		    imlib_context_set_image(destination);                    
+		    imlib_image_draw_pixel(x, y, 0);
+                  }
+                }
+		RETVAL = destination;
+	}
+        OUTPUT:
+	        RETVAL
+
+
+Image::Imlib2
+Imlib2_create_blended_image(source1, source2, pc)
+        Image::Imlib2 source1
+        Image::Imlib2 source2
+        int pc
+
+        PROTOTYPE: $$
+
+	PREINIT:
+		Imlib_Image destination;
+		Imlib_Color color1, color2;
+                int x, y, w, h;
+                int npc;
+
+        CODE:
+        {
+                npc = 100 - pc;
+		imlib_context_set_image(source1);
+		w = imlib_image_get_width();
+		h = imlib_image_get_height();
+
+                destination = imlib_create_image(w, h);
+		imlib_context_set_image(destination);
+
+                for (y = 0; y < h; y++) {
+                  for (x = 0; x < w; x++)  {
+           	    imlib_context_set_image(source1);
+                    imlib_image_query_pixel(x, y, &color1);
+           	    imlib_context_set_image(source2);
+                    imlib_image_query_pixel(x, y, &color2);
+		    imlib_context_set_image(destination);                    
+                    imlib_context_set_color((color1.red * pc + color2.red * npc)/100, (color1.green * pc + color2.green * npc)/100, (color1.blue * pc + color2.blue * npc)/100, 255);
+		    imlib_image_draw_line(x, y, x, y, 0);
+                  }
+                }
+		RETVAL = destination;
+	}
+        OUTPUT:
+	        RETVAL
 
 
 MODULE = Image::Imlib2	PACKAGE = Image::Imlib2::Polygon	PREFIX= Imlib2_Polygon_

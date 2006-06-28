@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 use strict;
-use Test::More tests => 18;
+use Test::More tests => 17;
 
 use_ok('Image::Imlib2');
 
@@ -14,6 +14,12 @@ is($image->get_width, 580);
 
 # Is it the right height?
 is($image->get_height, 200);
+
+# Is it the right width?
+is($image->width, 580);
+
+# Is it the right height?
+is($image->height, 200);
 
 # Is alpha on by default?
 is($image->has_alpha, 1);
@@ -88,18 +94,20 @@ $image->sharpen(1);
 # create a scaled image of it
 my $dstimage = $image->create_scaled_image(100,80);
 
-# Does has_alpha work?
+# does has_alpha work?
 $image->has_alpha(0);
 is($image->has_alpha, 0);
 
-eval { $image->not_a_method() };
-isnt( $@, '', 'not_a_method() blows up' );
+# create a transparent image
+my $new = $image->create_transparent_image(64);
 
-# since we're using use_ok, these aren't imported, so check them exactly
-ok(defined(Image::Imlib2::TEXT_TO_RIGHT()), "TEXT_TO_RIGHT");
-ok(defined(Image::Imlib2::TEXT_TO_LEFT()),  "TEXT_TO_LEFT");
-ok(defined(Image::Imlib2::TEXT_TO_UP()),    "TEXT_TO_UP");
-ok(defined(Image::Imlib2::TEXT_TO_DOWN()),  "TEXT_TO_DOWN");
-ok(defined(Image::Imlib2::TEXT_TO_ANGLE()), "TEXT_TO_ANGLE");
+# Is it the right width?
+is($image->get_width, 200);
+
+# Is it the right height?
+is($image->get_height, 580);
+
+# Is alpha on by default?
+is($new->has_alpha, 1);
 
 ok(1, "got to the end")

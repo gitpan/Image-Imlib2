@@ -1,5 +1,16 @@
 Revision history for Perl extension Image::Imlib2.
 
+1.10 Wed Jun 28 12:11:47 BST 2006
+    - added new_using_data and will_blend (thanks to Chris Dolan) -
+      new_using_data is endianness specific
+    - fixed documentation bug, it's called get_text_size not get_font_size
+    - added create_transparent_image method
+    - added create_blended_image
+    - added POD tests
+    - added width/height as synonyms to get_width/get_height
+    - disable buggy imlib_image_draw_pixel wrapper - if you have
+      a version of imlib2 1.0.5 or earlier you will now see the bug
+
 1.09 Thu Jun 15 16:43:10 GMT 2006
     - lose AUTOLOAD and define the constants in their own right
       code by Mark Fowler. this also means that random calls for

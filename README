@@ -74,12 +74,11 @@ DESCRIPTION
     installing this module.
 
 Exported constants
-        TEXT_TO_RIGHT
-        TEXT_TO_LEFT
-        TEXT_TO_UP
-        TEXT_TO_DOWN
-        TEXT_TO_ANGLE
-
+  TEXT_TO_RIGHT
+  TEXT_TO_LEFT
+  TEXT_TO_UP
+  TEXT_TO_DOWN
+  TEXT_TO_ANGLE
     To be used as the direction parameter for text functions that accept it.
 
 METHODS (Image::Imlib2)
@@ -87,7 +86,15 @@ METHODS (Image::Imlib2)
     This will create a new, blank image. If the dimensions aren't specified,
     it will default to 256 x 256.
 
-      my $image = new Image::Imlib2->new(100, 100)
+      my $image = Image::Imlib2->new(100, 100)
+
+  new_using_data
+    This will create a new image with the specified pixel data, which must
+    be a packed string. If the dimensions are not specified, it will default
+    to 256 x 256.
+
+      my $pixel = pack('CCCC', 255, 127, 0, 255); # ARGB
+      my $image = Image::Imlib2->new(100, 100, $pixel x 100*100)
 
   load
     This will load an existing graphics file and create a new image object.
@@ -128,6 +135,8 @@ METHODS (Image::Imlib2)
       $image->set_colour(  0, 255,   0, 255); # green
       $image->set_colour(  0,   0, 255, 255); # blue
       $image->set_colour(255, 127,   0, 127); # transparent orange
+
+    Warning: this sets a global variable for the draw color.
 
   draw_point (x, y)
     This colours a point in the image in the currently-selected colour. Note
@@ -193,7 +202,9 @@ METHODS (Image::Imlib2)
 
       $image->load_font("cinema/20");
 
-  get_font_size (text, direction, angle)
+    Warning: this sets a global variable for the current font.
+
+  get_text_size (text, direction, angle)
     This function returns the width and height in pixels the text string
     would use up if drawn with the current font. direction and angle are
     optional and deault to TEXT_TO_RIGHT and 0, respectively.
@@ -269,6 +280,20 @@ METHODS (Image::Imlib2)
 
       $image2=$image->create_scaled_image(100,100);  # Scale to 100x100 pixels
 
+  create_transparent_image (alpha)
+    Create a new image, based upon the original but with a fixed alpha
+    value. This will create a transparent image that you can then blend onto
+    other images. Alpha ranges from 0 to 255:
+
+      my $new = $image->create_transparent_image(64);
+
+  create_blended_image (percent)
+    Create a new image, which is percent% of source1 and (100-percent)% of
+    source2. This is used for fading bedtween two images. Percent ranges
+    from 0 to 100:
+
+      my $new = $source1->create_blended_image($source2, 50);
+
   flip_horizontal ()
     This will flip/mirror the image horizontally.
 
@@ -338,6 +363,13 @@ METHODS (Image::Imlib2)
     and compare mtimes with it's loaded copy - by default, this is not the
     case, so even if a file changes on disk, it won't be re-loaded.
 
+  will_blend (BOOL)
+    Changes the setting for whether drawing blends with existing pixels in
+    the image or overwrites those pixels. Defaults to true. Returns the new
+    value. If no argument is passed, just returns the current value.
+
+    Warning: this sets a global variable for blending.
+
 METHODS (Image::Imlib2::Polygon)
   new
     This will create a new polygon for use with Image::Imlib2::draw_polygon.
@@ -366,21 +398,34 @@ METHODS (Image::Imlib2::ColorRange)
 
       $cr->add_color(10, 255, 127, 0, 66);
 
-  get_width
+    Warning: this sets a global variable for the draw color.
+
+  width
     Returns the current width of the image.
+
+      my $width = $image->width;
+
+  height
+    Returns the current height of the image.
+
+      my $height = $image->height;
+
+DEPRECATED METHOS
+  get_width
+    Returns the current width of the image. Use width() instead.
 
       my $width = $image->get_width;
 
   get_height
-    Returns the current height of the image.
+    Returns the current height of the image. Use height() instead.
 
       my $height = $image->get_height;
 
 AUTHOR
-    Leon Brocard, leon@astray.com
+    Leon Brocard, acme@astray.com
 
 COPYRIGHT
-    Copyright (c) 2000-5 Leon Brocard. All rights reserved. This program is
+    Copyright (c) 2000-6 Leon Brocard. All rights reserved. This program is
     free software; you can redistribute it and/or modify it under the same
     terms as Perl itself.
 

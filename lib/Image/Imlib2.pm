@@ -7,6 +7,7 @@ require Exporter;
 require DynaLoader;
 
 @ISA = qw(Exporter DynaLoader);
+
 # Items to export into callers namespace by default. Note: do not export
 # names by default without a very good reason. Use EXPORT_OK instead.
 # Do not simply export all your public functions/methods/constants.
@@ -17,9 +18,18 @@ require DynaLoader;
     TEXT_TO_DOWN
     TEXT_TO_ANGLE
 );
-$VERSION = '1.09';
+$VERSION = '1.10';
 
 bootstrap Image::Imlib2 $VERSION;
+
+sub new_using_data {
+    my ( $pkg, $x, $y, $data ) = @_;
+    if ( defined $data && 4 * $x * $y == length $data ) {
+        return $pkg->_new_using_data( $x, $y, $data );
+    } else {
+        return undef;
+    }
+}
 
 1;
 __END__
@@ -107,11 +117,15 @@ installing this module.
 
 =head1 Exported constants
 
-    TEXT_TO_RIGHT
-    TEXT_TO_LEFT
-    TEXT_TO_UP
-    TEXT_TO_DOWN
-    TEXT_TO_ANGLE
+=head2 TEXT_TO_RIGHT
+
+=head2 TEXT_TO_LEFT
+
+=head2 TEXT_TO_UP
+
+=head2 TEXT_TO_DOWN
+
+=head2 TEXT_TO_ANGLE
 
 To be used as the direction parameter for text functions that
 accept it.
@@ -123,7 +137,16 @@ accept it.
 This will create a new, blank image. If the dimensions aren't
 specified, it will default to 256 x 256.
 
-  my $image = new Image::Imlib2->new(100, 100)
+  my $image = Image::Imlib2->new(100, 100)
+
+=head2 new_using_data
+
+This will create a new image with the specified pixel data, which must
+be a packed string. If the dimensions are not specified, it will
+default to 256 x 256.
+
+  my $pixel = pack('CCCC', 255, 127, 0, 255); # ARGB
+  my $image = Image::Imlib2->new(100, 100, $pixel x 100*100)
 
 =head2 load
 
@@ -169,6 +192,8 @@ half-transparent, and 255 is fully opaque. Many examples:
   $image->set_colour(  0, 255,   0, 255); # green
   $image->set_colour(  0,   0, 255, 255); # blue
   $image->set_colour(255, 127,   0, 127); # transparent orange
+
+Warning: this sets a global variable for the draw color.
 
 =head2 draw_point (x, y)
 
@@ -243,7 +268,9 @@ for colours.
 
   $image->load_font("cinema/20");
 
-=head2 get_font_size (text, direction, angle)
+Warning: this sets a global variable for the current font.
+
+=head2 get_text_size (text, direction, angle)
 
 This function returns the width and height in pixels the text string
 would use up if drawn with the current font.  direction and angle
@@ -327,6 +354,22 @@ and y. If x or y are 0, then retain the aspect ratio given in the other.
 
   $image2=$image->create_scaled_image(100,100);  # Scale to 100x100 pixels
 
+=head2 create_transparent_image (alpha)
+
+Create a new image, based upon the original but with a fixed alpha
+value. This will create a transparent image that you can then blend
+onto other images. Alpha ranges from 0 to 255:
+
+  my $new = $image->create_transparent_image(64);
+
+=head2 create_blended_image (percent)
+
+Create a new image, which is percent% of source1 and (100-percent)% of
+source2. This is used for fading bedtween two images. Percent ranges
+from 0 to 100:
+
+  my $new = $source1->create_blended_image($source2, 50);
+
 =head2 flip_horizontal ()
 
 This will flip/mirror the image horizontally.
@@ -402,6 +445,14 @@ this method on a loaded image tells Imlib2 to look at the disk and
 compare mtimes with it's loaded copy - by default, this is not the case,
 so even if a file changes on disk, it won't be re-loaded.
 
+=head2 will_blend (BOOL)
+
+Changes the setting for whether drawing blends with existing pixels in
+the image or overwrites those pixels.  Defaults to true.  Returns the
+new value.  If no argument is passed, just returns the current value.
+
+Warning: this sets a global variable for blending.
+
 =head1 METHODS (Image::Imlib2::Polygon)
 
 =head2 new
@@ -437,25 +488,41 @@ specified distance.
 
   $cr->add_color(10, 255, 127, 0, 66);
 
-=head2 get_width
+Warning: this sets a global variable for the draw color.
+
+=head2 width
 
 Returns the current width of the image.
+
+  my $width = $image->width;
+
+=head2 height
+
+Returns the current height of the image.
+
+  my $height = $image->height;
+
+=head1 DEPRECATED METHOS
+
+=head2 get_width
+
+Returns the current width of the image. Use width() instead.
 
   my $width = $image->get_width;
 
 =head2 get_height
 
-Returns the current height of the image.
+Returns the current height of the image. Use height() instead.
 
   my $height = $image->get_height;
 
 =head1 AUTHOR
 
-Leon Brocard, leon@astray.com
+Leon Brocard, acme@astray.com
 
 =head1 COPYRIGHT
 
-Copyright (c) 2000-5 Leon Brocard. All rights reserved. This program is
+Copyright (c) 2000-6 Leon Brocard. All rights reserved. This program is
 free software; you can redistribute it and/or modify it under the same
 terms as Perl itself.
 
