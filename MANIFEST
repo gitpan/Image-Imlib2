@@ -11,6 +11,8 @@ MANIFEST
 META.yml
 NINJA
 README
+t/autocrop.t
+t/blob.png
 t/cache.t
 t/data.t
 t/simple.t

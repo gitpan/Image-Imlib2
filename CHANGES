@@ -1,5 +1,9 @@
 Revision history for Perl extension Image::Imlib2.
 
+1.11 Thu Aug  3 10:53:33 BST 2006
+    - endianness fixes for new_using_data (thanks to Chris Dolan)
+    - added autocrop method
+    
 1.10 Wed Jun 28 12:11:47 BST 2006
     - added new_using_data and will_blend (thanks to Chris Dolan) -
       new_using_data is endianness specific

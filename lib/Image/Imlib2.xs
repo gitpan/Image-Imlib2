@@ -12,6 +12,12 @@ typedef Imlib_Image Image__Imlib2;
 typedef ImlibPolygon Image__Imlib2__Polygon;
 typedef Imlib_Color_Range Image__Imlib2__ColorRange;
 
+bool colours_equal(Imlib_Color col1, Imlib_Color col2) {
+  return col1.red   == col2.red   &&
+         col1.green == col2.green &&
+         col1.blue  == col2.blue;
+}
+
 static double
 TEXT_TO_RIGHT(void)
 {
@@ -82,7 +88,6 @@ Imlib2_new(packname="Image::Imlib2", x=256, y=256)
 	}
         OUTPUT:
 	        RETVAL
-
 
 Image::Imlib2
 Imlib2__new_using_data(packname="Image::Imlib2", x=256, y=256, data)
@@ -361,6 +366,140 @@ Imlib2_query_pixel(image, x, y)
         XPUSHs(sv_2mortal(newSViv(color_return.blue)));
         XPUSHs(sv_2mortal(newSViv(color_return.alpha)));
 
+void
+Imlib2_autocrop_dimensions(image)
+	Image::Imlib2	image
+
+	PROTOTYPE: $$
+
+	PREINIT:
+		Imlib_Color c, bg, tl, tr, bl, br;
+                int width, height;
+                int cx = 0;
+                int cy = 0;
+                int cw, ch;
+                int x1, y1, x2, y2;
+                int i;
+                bool abort;
+
+        PPCODE:
+		imlib_context_set_image(image);
+		width = imlib_image_get_width();
+		height = imlib_image_get_height();
+                cw = width;
+                ch = height;
+
+                /* guess the background colour
+                   algorithm from gimp's autocrop.c, originally pinched from
+                   pnmcrop: first see if three corners are equal, then if two are equal,
+                   otherwise give up */
+		imlib_image_query_pixel(0, 0, &tl);
+		imlib_image_query_pixel(width - 1, 0, &tr);
+		imlib_image_query_pixel(0, height - 1, &bl);
+		imlib_image_query_pixel(width -1 , height - 1, &br);
+
+                if (colours_equal(tr, bl) && colours_equal(tr, br)) {
+                   bg = tr;
+                } else if (colours_equal(tl, bl) && colours_equal(tl, br)) {
+                   bg = tl;
+                } else if (colours_equal(tl, tr) && colours_equal(tl, br)) {
+                   bg = tl;
+                } else if (colours_equal(tl, tr) && colours_equal(tl, bl)) {
+                   bg = tl;
+                } else if (colours_equal(tl, tr) || colours_equal(tl, bl) || colours_equal(tl, br)) {
+                   bg = tl;
+                } else if (colours_equal(tr, bl) || colours_equal(tr, bl)) {
+                   bg = tr;
+                } else if (colours_equal(br, bl)) {
+                   bg = br;
+                } else {
+                   /* all different? give up */
+                  XPUSHs(sv_2mortal(newSViv(cx)));
+                  XPUSHs(sv_2mortal(newSViv(cy)));
+                  XPUSHs(sv_2mortal(newSViv(cw)));
+                  XPUSHs(sv_2mortal(newSViv(ch)));
+                  return;
+                }
+
+                /* warn ("Have background colour: %i, %i, %i", bg.red, bg.green, bg.blue); */
+
+                /* check how many of the top lines are uniform */
+                abort = FALSE;
+                for (y1 = 0; y1 < height && !abort; y1++) {
+                  for (i = 0; i < width && !abort; i++) {
+                    imlib_image_query_pixel(i, y1, &c);
+                    abort = !colours_equal (c, bg);
+                    }
+                }                                 
+
+                /* warn("x1 %i, y1 %i, x2 %i, y2 %i", x1, y1, x2, y2); */
+
+                if (y1 == height - 1 && !abort) {
+                  /* plain colour */
+                  XPUSHs(sv_2mortal(newSViv(cx)));
+                  XPUSHs(sv_2mortal(newSViv(cy)));
+                  XPUSHs(sv_2mortal(newSViv(cw)));
+                  XPUSHs(sv_2mortal(newSViv(ch)));
+                }
+                
+                /* check how many of the bottom lines are uniform */
+                abort = FALSE;
+                for (y2 = height - 1; y2 >= 0 && !abort; y2--) {
+                  for (i = 0; i < width && !abort; i++) {
+                    imlib_image_query_pixel(i, y2, &c);
+                    abort = !colours_equal (c, bg);
+                  }
+                }
+
+                y2 += 1; /* to make y2 - y1 == height */
+
+                /* warn("x1 %i, y1 %i, x2 %i, y2 %i", x1, y1, x2, y2); */
+
+                /* the coordinates are now the first rows which DON'T match
+                * the colour - crop instead to one row larger:
+                */
+                if (y1 > 0) --y1;
+                if (y2 < height-1) ++y2;
+
+                /* check how many of the left lines are uniform */
+                abort = FALSE;
+                for (x1 = 0; x1 < width && !abort; x1++) {
+                  for (i = 0; i < y2-y1 && !abort; i++) {
+                    imlib_image_query_pixel(x1, y1 + i, &c);
+                    abort = !colours_equal (c, bg);
+                  }
+                }
+
+                /* warn("x1 %i, y1 %i, x2 %i, y2 %i", x1, y1, x2, y2); */
+
+                /* check how many of the right lines are uniform */
+                abort = FALSE;
+                for (x2 = width - 1; x2 >= 0 && !abort; x2--) {
+                  for (i = 0; i < y2-y1 && !abort; i++) {
+                    imlib_image_query_pixel(x2, y1 + i, &c);
+                    abort = !colours_equal (c, bg);
+                  }
+                }
+
+                x2 += 1; /* to make x2 - x1 == width */
+
+                /* the coordinates are now the first columns which DON'T match
+                 * the color - crop instead to one column larger:
+                 */
+                if (x1 > 0) --x1;
+                if (x2 < width-1) ++x2;
+
+                /* warn("x1 %i, y1 %i, x2 %i, y2 %i", x1, y1, x2, y2); */
+                
+                cx = x1;
+                cy = y1;
+                cw = x2 - x1;
+                ch = y2 - y1;
+  
+                XPUSHs(sv_2mortal(newSViv(cx)));
+                XPUSHs(sv_2mortal(newSViv(cy)));
+                XPUSHs(sv_2mortal(newSViv(cw)));
+                XPUSHs(sv_2mortal(newSViv(ch)));
 
 void
 Imlib2_draw_rectangle(image, x, y, w, h)

@@ -1,7 +1,9 @@
 #!/usr/bin/perl -w
 use strict;
 use Test::More;
-plan skip_all => "This test is not portable at the moment";
+
+# This line comes from perlport.pod
+my $AM_BIG_ENDIAN = unpack( 'h*', pack( 's', 1 ) ) =~ /01/ ? 1 : 0;
 
 # $h must be divisible by 3
 my $w = 4;
@@ -61,7 +63,7 @@ for my $test (
 
     my $pixels = $test->{pixels};
     my $alpha  = grep { $_->[0] != 255 } @$pixels;
-    my @packed = map { pack 'CCCC', @$_ } @$pixels;
+    my @packed = map { pack 'CCCC', ($AM_BIG_ENDIAN ? @$_ : reverse @$_) } @$pixels;
     my $rect   = ( $packed[0] x ( $w * $h / 3 ) )
         . ( $packed[1] x ( $w * $h / 3 ) )
         . ( $packed[2] x ( $w * $h / 3 ) );

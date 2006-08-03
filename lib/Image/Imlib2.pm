@@ -18,7 +18,7 @@ require DynaLoader;
     TEXT_TO_DOWN
     TEXT_TO_ANGLE
 );
-$VERSION = '1.10';
+$VERSION = '1.11';
 
 bootstrap Image::Imlib2 $VERSION;
 
@@ -29,6 +29,12 @@ sub new_using_data {
     } else {
         return undef;
     }
+}
+
+sub autocrop {
+    my $image = shift;
+    my($x, $y, $w, $h) = $image->autocrop_dimensions;
+    return $image->crop($x, $y, $w, $h);
 }
 
 1;
@@ -45,6 +51,9 @@ Image::Imlib2 - Interface to the Imlib2 image library
 
   # create a new image
   my $image = Image::Imlib2->new(200, 200);
+
+  # or load an image
+  $image = Image::Imlib2->load("foo.png");
 
   # Enable the alpha channel support
   $image->has_alpha(1);
@@ -289,6 +298,20 @@ TEXT_TO_RIGHT and 0, respectively.
   $image->draw_text(50, 50, "Groovy, baby, yeah!");
   $image->draw_text(50, 50, "Sweet, baby, yeah!",
                     TEXT_TO_UP, 1.571);
+
+=head2 autocrop
+
+This creates a duplicate of the image which is automatically cropped
+to remove the background colour from the outside of the image:
+
+  my $cropped_image = $image->autocrop;
+
+=head2 autocrop_dimensions
+
+This returns the x, y, width and height rectangle in an image which
+would hold the results of the autocrop method:
+
+  my($x, $y, $w, $h) = $image->autocrop_dimensions;
 
 =head2 crop (x, y, w, h)
 
