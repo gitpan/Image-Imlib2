@@ -1,5 +1,9 @@
 Revision history for Perl extension Image::Imlib2.
 
+1.12 Tue Aug 15 10:14:55 BST 2006
+    - added find_colour method
+    - added fill method
+
 1.11 Thu Aug  3 10:53:33 BST 2006
     - endianness fixes for new_using_data (thanks to Chris Dolan)
     - added autocrop method

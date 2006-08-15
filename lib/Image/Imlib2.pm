@@ -18,7 +18,7 @@ require DynaLoader;
     TEXT_TO_DOWN
     TEXT_TO_ANGLE
 );
-$VERSION = '1.11';
+$VERSION = '1.12';
 
 bootstrap Image::Imlib2 $VERSION;
 
@@ -475,6 +475,22 @@ the image or overwrites those pixels.  Defaults to true.  Returns the
 new value.  If no argument is passed, just returns the current value.
 
 Warning: this sets a global variable for blending.
+
+=head2 find_colour
+
+This returns the x and y coordinates for the first pixel of the
+current colour it finds in the image:
+
+  # find a red pixel
+  $i->set_colour(255, 0, 0, 255);
+  my($rx, $ry) = $i->find_red;
+
+=head2 fill
+
+This flood fills the image, starting at the x and y coordinates and
+filling every pixel under it with the current colour:
+
+  $i->fill($x, $y);
 
 =head1 METHODS (Image::Imlib2::Polygon)
 

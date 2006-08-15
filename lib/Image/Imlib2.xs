@@ -502,6 +502,150 @@ Imlib2_autocrop_dimensions(image)
                 XPUSHs(sv_2mortal(newSViv(ch)));
 
 void
+Imlib2_find_colour(image)
+	Image::Imlib2	image
+
+	PROTOTYPE: $$
+
+	PREINIT:
+		Imlib_Color c;
+                int r, g, b, a;
+                int width, height;
+                int x = 0;
+                int y = 0;
+                bool abort;
+
+        PPCODE:
+		imlib_context_set_image(image);
+		width = imlib_image_get_width();
+		height = imlib_image_get_height();
+                imlib_context_get_color(&r, &g, &b, &a);
+//                warn("pr = %i, pg = %i, pb = %i", r, g, b);
+
+                abort = FALSE;
+                for (y = 0; y < height && !abort; y++) {
+                  for (x = 0; x < width && !abort; x++) {
+                    imlib_image_query_pixel(x, y, &c);
+                    abort = c.red == r && c.green == g && c.blue == b;
+                    }
+                }                                 
+
+                XPUSHs(sv_2mortal(newSViv(x)));
+                XPUSHs(sv_2mortal(newSViv(y)));
+
+void
+Imlib2_fill(image, x, y, newimage=NULL)
+	Image::Imlib2	image
+        Image::Imlib2   newimage
+	int	x
+	int 	y
+
+	PROTOTYPE: $$$$;$
+
+	PREINIT:
+		Imlib_Color c;
+                int r, g, b, a;
+                int or, og, ob, oa;
+                int width, height, px, py, west, east;
+                AV* coords;
+                SV* sv;
+                int length;
+                bool abort;
+
+        PPCODE:
+		imlib_context_set_image(image);
+		width = imlib_image_get_width();
+		height = imlib_image_get_height();
+
+                imlib_image_query_pixel(x, y, &c);
+                or = c.red; og = c.green; ob = c.blue;
+
+                imlib_context_get_color(&r, &g, &b, &a);
+//                warn("pr = %i, pg = %i, pb = %i", r, g, b);
+
+                coords = newAV();
+                av_push(coords, newSViv(x));
+                av_push(coords, newSViv(y));
+
+                while (av_len(coords) != -1) {
+
+                      length = av_len(coords);
+//                      warn("length %i", length);
+                
+                      sv = av_shift(coords);
+                      x = SvIVX(sv);
+                      sv_free(sv);
+                      sv = av_shift(coords);
+                      y = SvIVX(sv);
+                      sv_free(sv);
+                      imlib_image_query_pixel(x, y, &c);
+
+                      if ((c.red == or && c.green == og && c.blue == ob)) {
+
+                      if (newimage != NULL) {
+                         imlib_context_set_image(newimage);
+                         imlib_context_set_color(r, g, b, a);
+                         imlib_image_draw_pixel(x, y, 0);                         
+                         imlib_context_set_image(image);                         
+                      }
+                      imlib_image_draw_pixel(x, y, 0);
+
+                      west = x;
+                      east = x;
+
+                      abort = FALSE;
+                      while (!abort) {
+                          west -= 1;
+                          imlib_image_query_pixel(west, y, &c);
+                          abort = (west == 0
+                            || !(c.red == or && c.green == og && c.blue == ob)
+                          );
+                      }
+                      
+                      abort = FALSE;
+                      while (!abort) {
+                          east += 1;
+                          imlib_image_query_pixel(east, y, &c);
+                          abort = (east == width
+                            || !(c.red == or && c.green == og && c.blue == ob)
+                          );
+                      }
+//                      warn("  %i-%i, %i", west, east, y);
+
+                      for (px = west; px <= east; px++) {
+                          if (newimage != NULL) {
+                             imlib_context_set_image(newimage);
+                             imlib_image_draw_pixel(px, y, 0);                         
+                             imlib_context_set_image(image);                         
+                          }
+                          imlib_image_draw_pixel(px, y, 0);
+
+                          py = y - 1;
+                          imlib_image_query_pixel(px, py, &c);
+                          if (py > 0 
+                              && (c.red == or && c.green == og && c.blue == ob)
+                          ) {
+//                                warn("  ^ %i, %i", px, py);
+                              av_push(coords, newSViv(px));
+                              av_push(coords, newSViv(py));
+                          }
+
+                          py = y + 1;
+                          imlib_image_query_pixel(px, py, &c);
+                          if (py < height
+                              && (c.red == or && c.green == og && c.blue == ob)
+                          ) {
+//                                warn("  v %i, %i", px, py);
+                              av_push(coords, newSViv(px));
+                              av_push(coords, newSViv(py));
+                          }
+                      }
+                      }
+                }
+                av_undef(coords);
+
+
+void
 Imlib2_draw_rectangle(image, x, y, w, h)
 	Image::Imlib2	image
 	int	x

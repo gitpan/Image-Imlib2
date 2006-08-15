@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name: Image-Imlib2
-version: 1.11
+version: 1.12
 author:
   - Leon Brocard, acme@astray.com
 abstract: Interface to the Imlib2 image library

@@ -385,6 +385,20 @@ METHODS (Image::Imlib2)
 
     Warning: this sets a global variable for blending.
 
+  find_colour
+    This returns the x and y coordinates for the first pixel of the current
+    colour it finds in the image:
+
+      # find a red pixel
+      $i->set_colour(255, 0, 0, 255);
+      my($rx, $ry) = $i->find_red;
+
+  fill
+    This flood fills the image, starting at the x and y coordinates and
+    filling every pixel under it with the current colour:
+
+      $i->fill($x, $y);
+
 METHODS (Image::Imlib2::Polygon)
   new
     This will create a new polygon for use with Image::Imlib2::draw_polygon.
