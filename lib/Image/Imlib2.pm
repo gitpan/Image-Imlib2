@@ -18,7 +18,7 @@ require DynaLoader;
     TEXT_TO_DOWN
     TEXT_TO_ANGLE
 );
-$VERSION = '1.12';
+$VERSION = '1.13';
 
 bootstrap Image::Imlib2 $VERSION;
 
@@ -479,7 +479,8 @@ Warning: this sets a global variable for blending.
 =head2 find_colour
 
 This returns the x and y coordinates for the first pixel of the
-current colour it finds in the image:
+current colour it finds in the image. It returns undef if it doesn't
+find the colour:
 
   # find a red pixel
   $i->set_colour(255, 0, 0, 255);

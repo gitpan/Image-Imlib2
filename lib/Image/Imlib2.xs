@@ -423,25 +423,6 @@ Imlib2_autocrop_dimensions(image)
 
                 /* warn ("Have background colour: %i, %i, %i", bg.red, bg.green, bg.blue); */
 
-                /* check how many of the top lines are uniform */
-                abort = FALSE;
-                for (y1 = 0; y1 < height && !abort; y1++) {
-                  for (i = 0; i < width && !abort; i++) {
-                    imlib_image_query_pixel(i, y1, &c);
-                    abort = !colours_equal (c, bg);
-                    }
-                }                                 
-
-                /* warn("x1 %i, y1 %i, x2 %i, y2 %i", x1, y1, x2, y2); */
-
-                if (y1 == height - 1 && !abort) {
-                  /* plain colour */
-                  XPUSHs(sv_2mortal(newSViv(cx)));
-                  XPUSHs(sv_2mortal(newSViv(cy)));
-                  XPUSHs(sv_2mortal(newSViv(cw)));
-                  XPUSHs(sv_2mortal(newSViv(ch)));
-                }
-                
                 /* check how many of the bottom lines are uniform */
                 abort = FALSE;
                 for (y2 = height - 1; y2 >= 0 && !abort; y2--) {
@@ -450,6 +431,29 @@ Imlib2_autocrop_dimensions(image)
                     abort = !colours_equal (c, bg);
                   }
                 }
+
+                /* warn("x1 %i, y1 %i, x2 %i, y2 %i", x1, y1, x2, y2); */
+
+                if (y2 == -1) {
+                  /* plain colour */
+                  XPUSHs(sv_2mortal(newSViv(cx)));
+                  XPUSHs(sv_2mortal(newSViv(cy)));
+                  XPUSHs(sv_2mortal(newSViv(cw)));
+                  XPUSHs(sv_2mortal(newSViv(ch)));
+				  return;
+                }
+
+				/* since now we don't need to check for the upper boundary 
+				of the outer loops as there is at least one pixel of different colour */
+
+                /* check how many of the top lines are uniform */
+                abort = FALSE;
+                for (y1 = 0; !abort; y1++) {
+                  for (i = 0; i < width && !abort; i++) {
+                    imlib_image_query_pixel(i, y1, &c);
+                    abort = !colours_equal (c, bg);
+                    }
+                }                                 
 
                 y2 += 1; /* to make y2 - y1 == height */
 
@@ -463,9 +467,9 @@ Imlib2_autocrop_dimensions(image)
 
                 /* check how many of the left lines are uniform */
                 abort = FALSE;
-                for (x1 = 0; x1 < width && !abort; x1++) {
-                  for (i = 0; i < y2-y1 && !abort; i++) {
-                    imlib_image_query_pixel(x1, y1 + i, &c);
+                for (x1 = 0; !abort; x1++) {
+                  for (i = y1; i < y2 && !abort; i++) {
+                    imlib_image_query_pixel(x1, i, &c);
                     abort = !colours_equal (c, bg);
                   }
                 }
@@ -474,9 +478,9 @@ Imlib2_autocrop_dimensions(image)
 
                 /* check how many of the right lines are uniform */
                 abort = FALSE;
-                for (x2 = width - 1; x2 >= 0 && !abort; x2--) {
-                  for (i = 0; i < y2-y1 && !abort; i++) {
-                    imlib_image_query_pixel(x2, y1 + i, &c);
+                for (x2 = width - 1; !abort; x2--) {
+                  for (i = y1; i < y2 && !abort; i++) {
+                    imlib_image_query_pixel(x2, i, &c);
                     abort = !colours_equal (c, bg);
                   }
                 }
@@ -530,8 +534,13 @@ Imlib2_find_colour(image)
                     }
                 }                                 
 
-                XPUSHs(sv_2mortal(newSViv(x)));
-                XPUSHs(sv_2mortal(newSViv(y)));
+                if (abort) {
+                  XPUSHs(sv_2mortal(newSViv(x)));
+                  XPUSHs(sv_2mortal(newSViv(y)));
+                } else {
+                  XPUSHs(newSV(0));
+                  XPUSHs(newSV(0));
+                }
 
 void
 Imlib2_fill(image, x, y, newimage=NULL)

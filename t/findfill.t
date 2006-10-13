@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 use strict;
-use Test::More tests => 10;
+use Test::More tests => 12;
 
 use_ok('Image::Imlib2');
 
@@ -34,6 +34,12 @@ is($ry, 97);
 $i->set_colour(0, 0, 127, 255);
 $i->fill($rx, $ry);
 $i->fill($rx + 5, $ry);
+
+# find orange, which isn't there
+$i->set_colour(255, 127, 0, 255);
+($rx, $ry) = $i->find_colour;
+is($rx, undef);
+is($ry, undef);
 
 my $new = Image::Imlib2->new($w, $h);
 $new->set_colour(255, 255, 255, 255);
