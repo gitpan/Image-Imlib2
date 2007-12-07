@@ -18,9 +18,11 @@ require DynaLoader;
     TEXT_TO_DOWN
     TEXT_TO_ANGLE
 );
-$VERSION = '1.13';
+$VERSION = '2.00';
 
 bootstrap Image::Imlib2 $VERSION;
+
+Image::Imlib2->set_cache_size(0);
 
 sub new_using_data {
     my ( $pkg, $x, $y, $data ) = @_;
@@ -425,8 +427,10 @@ alpha is on by default when you create an image:
 
 =head2 set_cache_size (INT)
 
-By default, Imlib2 will cache all loaded images (up to some maximum cache
-size) and will use this cache to avoid loading images from disk.
+By default, Imlib2 will free up loaded images when they are no longer needed.
+    
+If you set a higher cache size then Imlib2 will cache all loaded images (up 
+to this size) and will use this cache to avoid loading images from disk.
 
 Sets the size of the image cache. Reducing this value will cause the cache to
 be emptied.  You can turn off caching all together by setting this to zero.
