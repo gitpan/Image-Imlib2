@@ -14,7 +14,7 @@ Alternatively, if you have downloaded and installed imlib2 and this
 still will not work, modify the $CONFIG variable inside Build.PL to
 point to the imlib2-config program that provides.
 ';
-  exit;
+  exit 0;
 } else {
   print "Found imlib2 $version";
 }

@@ -1,5 +1,8 @@
 Revision history for Perl extension Image::Imlib2.
 
+2.01 Sun Jun  8 10:05:46 BST 2008
+    - in Build.PL, exit 0 when we can't find libimlib2
+
 2.00 Fri Dec  7 11:29:47 GMT 2007
     - make the cache size 0 by default
 
