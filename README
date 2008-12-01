@@ -91,6 +91,9 @@ METHODS (Image::Imlib2)
 
       my $image = Image::Imlib2->new(100, 100)
 
+    The contents of this image at creation time are undefined - they could
+    be garbage memory. You should clear the image if necessary.
+
   new_using_data
     This will create a new image with the specified pixel data, which must
     be a packed string. If the dimensions are not specified, it will default
@@ -337,8 +340,10 @@ METHODS (Image::Imlib2)
        $image->has_alpha(1);
 
   set_cache_size (INT)
-    By default, Imlib2 will cache all loaded images (up to some maximum
-    cache size) and will use this cache to avoid loading images from disk.
+    By default, Imlib2 will not cache any images loaded from disk.
+
+    If you set a cache size then Imlib2 will cache all loaded images (up to
+    this size) and will use this cache to avoid loading images from disk.
 
     Sets the size of the image cache. Reducing this value will cause the
     cache to be emptied. You can turn off caching all together by setting
@@ -348,6 +353,7 @@ METHODS (Image::Imlib2)
     memory that image will be returned immediately without checking the
     disk.
 
+      Image::Imlib2->set_cache_size(1024 * 1024);
       my $image = Image::Imlib2->load("foo.jpg"); # image loaded from disk
       ... later, somewhere else, after $image has gone away ...
       my $image = Image::Imlib2->load("foo.jpg"); # same image, even if changed on disk
@@ -387,7 +393,8 @@ METHODS (Image::Imlib2)
 
   find_colour
     This returns the x and y coordinates for the first pixel of the current
-    colour it finds in the image:
+    colour it finds in the image. It returns undef if it doesn't find the
+    colour:
 
       # find a red pixel
       $i->set_colour(255, 0, 0, 255);

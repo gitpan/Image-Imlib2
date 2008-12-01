@@ -1,5 +1,9 @@
 Revision history for Perl extension Image::Imlib2.
 
+2.02 Mon Dec  1 11:55:06 GMT 2008
+    - update documentation to clarify cache_size
+    - note that new images have undefined content (thanks to barbie)
+
 2.01 Sun Jun  8 10:05:46 BST 2008
     - in Build.PL, exit 0 when we can't find libimlib2
 

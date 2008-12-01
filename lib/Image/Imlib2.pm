@@ -18,7 +18,7 @@ require DynaLoader;
     TEXT_TO_DOWN
     TEXT_TO_ANGLE
 );
-$VERSION = '2.01';
+$VERSION = '2.02';
 
 bootstrap Image::Imlib2 $VERSION;
 
@@ -149,6 +149,9 @@ This will create a new, blank image. If the dimensions aren't
 specified, it will default to 256 x 256.
 
   my $image = Image::Imlib2->new(100, 100)
+
+The contents of this image at creation time are undefined - they 
+could be garbage memory. You should clear the image if necessary.
 
 =head2 new_using_data
 
@@ -427,9 +430,9 @@ alpha is on by default when you create an image:
 
 =head2 set_cache_size (INT)
 
-By default, Imlib2 will free up loaded images when they are no longer needed.
-    
-If you set a higher cache size then Imlib2 will cache all loaded images (up 
+By default, Imlib2 will not cache any images loaded from disk.
+
+If you set a cache size then Imlib2 will cache all loaded images (up 
 to this size) and will use this cache to avoid loading images from disk.
 
 Sets the size of the image cache. Reducing this value will cause the cache to
@@ -438,6 +441,7 @@ be emptied.  You can turn off caching all together by setting this to zero.
 Even without a cache, as long as you have a reference to an image in memory
 that image will be returned immediately without checking the disk.
 
+  Image::Imlib2->set_cache_size(1024 * 1024);
   my $image = Image::Imlib2->load("foo.jpg"); # image loaded from disk
   ... later, somewhere else, after $image has gone away ...
   my $image = Image::Imlib2->load("foo.jpg"); # same image, even if changed on disk

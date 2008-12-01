@@ -1,6 +1,6 @@
 ---
 name: Image-Imlib2
-version: 2.01
+version: 2.02
 author:
   - 'Leon Brocard, acme@astray.com'
 abstract: Interface to the Imlib2 image library
@@ -13,7 +13,7 @@ requires:
 provides:
   Image::Imlib2:
     file: lib/Image/Imlib2.pm
-    version: 2.01
+    version: 2.02
 generated_by: Module::Build version 0.280801
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.2.html
